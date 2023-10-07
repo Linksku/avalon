@@ -12,7 +12,7 @@ export default function RolesSelector() {
   return (
     <div>
       <h2>Roles</h2>
-      {roles.map(role => {
+      {[...roles.values()].map(role => {
         const selected = selectedRoles.has(role);
         return (
           <div

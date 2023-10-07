@@ -5,7 +5,7 @@ import styles from './PlayersSelector.module.css';
 export default function PlayersSelector() {
   const { players, setPlayers } = useStore();
 
-  const nextId = performance.now();
+  const nextId = Math.round(performance.now());
   const playerIds = [...[...players.values()].map(p => p.id), nextId];
   return (
     <div>

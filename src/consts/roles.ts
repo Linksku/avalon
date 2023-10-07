@@ -1,5 +1,25 @@
 const roles = [
   {
+    name: 'Townsfolk',
+    maxCount: 4,
+    isEvil: false,
+    getStrength: () => 1,
+    ability: '',
+    getInfo(players) {
+      return 'todo';
+    },
+  },
+  {
+    name: 'Minion',
+    maxCount: 3,
+    isEvil: true,
+    getStrength: () => 2,
+    ability: 'Knows Evil',
+    getInfo(players) {
+      return 'todo';
+    },
+  },
+  {
     name: 'Merlin',
     isEvil: false,
     getStrength: roles => 1 + (roles.filter(r => r.isEvil).length / 2),
@@ -20,21 +40,11 @@ const roles = [
     },
   },
   {
-    name: 'Townsfolk',
-    maxCount: 4,
-    isEvil: false,
-    getStrength: () => 1,
-    ability: '',
-    getInfo(players) {
-      return 'todo';
-    },
-  },
-  {
-    name: 'Minion',
-    maxCount: 3,
+    name: 'Assassin',
     isEvil: true,
     getStrength: () => 2,
-    ability: 'Knows Evil',
+    ability: 'Assassinates Merlin',
+    requiredRoles: ['Merlin'],
     getInfo(players) {
       return 'todo';
     },
@@ -71,9 +81,14 @@ const roles = [
 ] satisfies (Omit<Role, 'id'> & { maxCount?: number })[];
 
 let nextId = 1;
-export default roles.flatMap(
-  ({ maxCount, ...role }) => Array.from({ length: maxCount ?? 1 }).map(() => ({
-    id: nextId++,
-    ...role,
-  })),
+const rolesArr = roles.flatMap(
+  ({ maxCount, ...role }) => Array.from({ length: maxCount ?? 1 }).map(() => [
+    nextId,
+    {
+      id: nextId++,
+      ...role,
+    },
+  ] as [number, Role]),
 );
+
+export default new Map(rolesArr);
