@@ -1,0 +1,43 @@
+// Responsive.
+$screenXs: 360px;
+$screenSm: 480px;
+$screenMd: 768px;
+$screenLg: 1200px;
+
+// Basics.
+$primaryColor: #2196f3;
+
+$textColor: #333;
+$lightTextColor: #666;
+$fadedTextColor: #999;
+$linkColor: $primaryColor;
+$fontFamily: roboto, helvetica, sans-serif;
+$headingFontFamily: roboto, helvetica, sans-serif;
+
+$separatorColor: #eaeaea;
+$greyBackgroundColor: #f6f6f6;
+$activeBackgroundColor: #f9f9f9;
+
+$fadedPrimaryColorBg: color.scale($primaryColor, $saturation: -10%, $lightness: 50%);
+$fadedPrimaryColorText: color.mix($primaryColor, $fadedTextColor, $weight: 30%);
+$activePrimaryColorBg: color.scale($primaryColor, $lightness: -25%);
+$activePrimaryColorBorder: color.scale($primaryColor, $lightness: -25%);
+
+// Z-Index.
+$zIndexDropdown: 100;
+$zIndexSticky: 200;
+$zIndexFixed: 300;
+$zIndexSidebar: 400;
+$zIndexStack: 500;
+$zIndexSlideUp: 600;
+$zIndexAlert: 700;
+$zIndexToast: 800;
+
+// Inputs.
+$inputHeight: 4.2rem;
+$inputPadding: 1rem;
+$inputBorderColor: #ccc;
+$inputBorder: 0.5px solid $inputBorderColor;
+$inputBorderRadius: 4px;
+$inputColor: $textColor;
+$inputPlaceholderColor: $fadedTextColor;

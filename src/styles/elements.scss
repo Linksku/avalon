@@ -1,0 +1,229 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  // Doesn't work in iOS: https://bugs.webkit.org/show_bug.cgi?id=176454
+  // stylelint-disable-next-line plugin/no-unsupported-browser-features
+  overscroll-behavior-y: none;
+  overflow: hidden;
+}
+
+html {
+  // stylelint-disable-next-line declaration-property-unit-allowed-list
+  font-size: 9px;
+  background-color: #fff;
+  color: #333;
+  font-family: helvetica, sans-serif;
+  user-select: none;
+
+  @include gtXs {
+    // stylelint-disable-next-line declaration-property-unit-allowed-list
+    font-size: 10px;
+  }
+
+  @include gtSm {
+    // stylelint-disable-next-line declaration-property-unit-allowed-list
+    font-size: 11px;
+  }
+
+  @include gtMd {
+    // stylelint-disable-next-line declaration-property-unit-allowed-list
+    font-size: 12px;
+  }
+
+  @include gtLg {
+    // stylelint-disable-next-line declaration-property-unit-allowed-list
+    font-size: 13px;
+  }
+}
+
+body {
+  font-size: 1.6rem;
+  line-height: 1.2;
+  // Matches iOS show keyboard animation
+  transition: padding-top 0.2s ease-out;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  @include oneLine;
+
+  font-variant-ligatures: none;
+  font-size: 1em;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+// Title.
+// h1 {}
+
+// Main heading.
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+// Section heading.
+h3 {
+  margin-bottom: 0.5rem;
+}
+
+// Item heading.
+h4 {
+  font-weight: 400;
+}
+
+b,
+strong {
+  font-weight: 500;
+}
+
+label[for] {
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+a,
+[role=button],
+[role=link],
+[tabindex],
+button,
+input[type=button],
+input[type=submit],
+input[type=reset],
+input[type=checkbox],
+input[type=radio],
+input[type=file],
+select,
+label {
+  cursor: pointer;
+}
+
+a,
+[role=button],
+img {
+  // stylelint-disable-next-line property-no-unknown
+  user-drag: none;
+  user-select: none;
+}
+
+a,
+[role=button] {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+p {
+  margin-top: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.4;
+
+  a,
+  p [role=button] {
+    color: #2196f3;
+  }
+}
+
+a:focus-visible,
+[role=button]:focus-visible {
+  outline: #2196f3 solid 1px;
+  outline-offset: -1px;
+}
+
+table {
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+
+th {
+  text-align: left;
+}
+
+td,
+th {
+  padding: 0.5rem 0.8rem;
+
+  &:not(:first-child) {
+    border-left: 0.5px solid $separatorColor;
+  }
+
+  &:not(:last-child) {
+    border-right: 0.5px solid $separatorColor;
+  }
+}
+
+thead {
+  border-bottom: 0.5px solid $separatorColor;
+}
+
+tbody {
+  tr:not(:first-child) {
+    border-top: 0.5px solid $separatorColor;
+  }
+
+  tr:not(:last-child) {
+    border-bottom: 0.5px solid $separatorColor;
+  }
+}
+
+tfoot {
+  border-top: 0.5px solid $separatorColor;
+}
+
+ul,
+ol {
+  padding-left: 2rem;
+  margin-top: 0;
+
+  @include gtMd {
+    padding-left: 3rem;
+  }
+}
+
+ul ul {
+  list-style-type: circle;
+  margin-left: -0.5rem;
+}
+
+ol ol {
+  margin-left: -0.5rem;
+}
+
+li {
+  padding: 2px 0;
+}
+
+svg {
+  fill: currentColor;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+p svg {
+  height: 0.9em;
+  width: 0.9em;
+  display: inline-block;
+}
+
+// iOS input shadow: https://stackoverflow.com/questions/23211656/remove-ios-input-shadow
+input,
+input[type],
+textarea {
+  background-clip: padding-box !important;
+}
+
+// iOS date input
+::-webkit-date-and-time-value {
+  text-align: left;
+}

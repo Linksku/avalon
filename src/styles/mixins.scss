@@ -1,0 +1,94 @@
+@import './variables.scss';
+
+@mixin gtXs {
+  @media (min-width: #{$screenXs}) {
+    @content;
+  }
+}
+
+@mixin gtSm {
+  @media (min-width: #{$screenSm}) {
+    @content;
+  }
+}
+
+@mixin gtMd {
+  @media (min-width: #{$screenMd}) {
+    @content;
+  }
+}
+
+@mixin gtLg {
+  @media (min-width: #{$screenLg}) {
+    @content;
+  }
+}
+
+@mixin ltXs {
+  @media (max-width: #{$screenXs - 1px}) {
+    @content;
+  }
+}
+
+@mixin ltSm {
+  @media (max-width: #{$screenSm - 1px}) {
+    @content;
+  }
+}
+
+@mixin ltMd {
+  @media (max-width: #{$screenMd - 1px}) {
+    @content;
+  }
+}
+
+@mixin ltLg {
+  @media (max-width: #{$screenLg - 1px}) {
+    @content;
+  }
+}
+
+@mixin retina {
+  // stylelint-disable-next-line plugin/no-unsupported-browser-features, media-feature-name-no-vendor-prefix, media-feature-range-notation
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    @content;
+  }
+}
+
+@mixin optionalAtRoot($sel) {
+  @at-root #{if(not &, $sel, selector-append(&, $sel))} {
+    @content;
+  }
+}
+
+@mixin placeholder {
+  @include optionalAtRoot('::-webkit-input-placeholder') {
+    @content;
+  }
+
+  @include optionalAtRoot(':-moz-placeholder') {
+    @content;
+  }
+
+  @include optionalAtRoot('::-moz-placeholder') {
+    @content;
+  }
+
+  @include optionalAtRoot(':-ms-input-placeholder') {
+    @content;
+  }
+}
+
+@mixin fadeIn($duration) {
+  :global {
+    animation-name: keyframesFadeIn;
+  }
+
+  animation-duration: $duration;
+}
+
+@mixin oneLine {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
