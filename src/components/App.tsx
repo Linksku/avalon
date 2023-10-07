@@ -1,26 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.scss';
+import { useStore } from '../stores/Store';
+import StartPage from './start/StartPage';
+import NightPage from './NightPage';
+import QuestsPage from './QuestsPage';
+import AssassinationPage from './AssassinationPage';
+
+const GAME_STATE_TO_COMPONENT = {
+  start: <StartPage />,
+  night: <NightPage />,
+  quests: <QuestsPage />,
+  assassination: <AssassinationPage />,
+} satisfies Record<GameState, ReactElement>;
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const { gameState } = useStore();
+
+  return GAME_STATE_TO_COMPONENT[gameState];
 }
 
 export default App;

@@ -6,14 +6,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html,
-body {
-  // Doesn't work in iOS: https://bugs.webkit.org/show_bug.cgi?id=176454
-  // stylelint-disable-next-line plugin/no-unsupported-browser-features
-  overscroll-behavior-y: none;
-  overflow: hidden;
-}
-
 html {
   // stylelint-disable-next-line declaration-property-unit-allowed-list
   font-size: 9px;
