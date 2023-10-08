@@ -3,7 +3,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { ReactComponent as CheckSvg } from 'fontawesome-svgs/svg/check-circle-light.svg';
-import shuffle from 'lodash/shuffle';
 
 import { useStore } from '../../stores/Store';
 import roles from '../../consts/roles';
@@ -12,21 +11,15 @@ import TopBar from '../TopBar';
 import styles from './NightPage.module.scss';
 import clsx from 'clsx';
 
-function randInfo(players: { player: Player, role: Role }[], curPlayer: Player) {
-  const otherPlayerNames = shuffle(players.map(p => p.player.name).filter(n => n !== curPlayer.name));
-  return `Subtly glance at ${otherPlayerNames[0]} and ${otherPlayerNames[1]}`;
-}
-
-function PlayerSlideUp({ player, role, info, onClose }: {
+function PlayerSlideUp({ player, role, onClose }: {
   player?: Player | null,
   role?: Role | null,
-  info?: string,
   onClose: () => void,
 }) {
-  const [allowHide, setAllowHide] = useState(false);
+  const [hideablePlayer, setHideablePlayer] = useState<number | null>(null);
   useEffect(() => {
     const timer = setTimeout(() => {
-      setAllowHide(true);
+      setHideablePlayer(player?.id ?? null);
     }, 3000);
 
     return () => {
@@ -45,13 +38,13 @@ function PlayerSlideUp({ player, role, info, onClose }: {
           <h3>{player.name}</h3>
           <h4>{role.name}  &middot; {role.isEvil ? 'Evil' : 'Good'}</h4>
           <p>{role.ability}</p>
-          <p>{info}</p>
+          <p>{player.info}</p>
         </>
       )}
       <Button
         variant="contained"
         size="large"
-        disabled={!allowHide}
+        disabled={hideablePlayer !== player?.id}
         onClick={onClose}
       >
         Hide
@@ -90,11 +83,6 @@ export default function NightPage() {
                 }, 500) as unknown as number;
               }
             }}
-            onPointerMove={() => {
-              if (longPressTimer.current) {
-                clearTimeout(longPressTimer.current);
-              }
-            }}
             onPointerCancel={() => {
               if (longPressTimer.current) {
                 clearTimeout(longPressTimer.current);
@@ -122,9 +110,6 @@ export default function NightPage() {
       <PlayerSlideUp
         player={shownPlayer}
         role={shownRole}
-        info={shownPlayer && shownRole
-          ? (shownRole.getInfo?.(playersArr, shownPlayer) ?? randInfo(playersArr, shownPlayer))
-          : undefined}
         onClose={() => {
           setShownPlayer(null);
           if (shownPlayer) {

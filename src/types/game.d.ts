@@ -8,7 +8,18 @@ type RoleName =
   | 'Assassin'
   | 'Morgana'
   | 'Mordred'
-  | 'Oberon';
+  | 'Oberon'
+  | 'Untrustworthy Servant'
+  | 'Lunatic'
+  | 'Revealer'
+  | 'Mason'
+  | 'Lone Wolf'
+  | 'Village Idiot'
+  | 'Empath'
+  | 'Noble'
+  | 'Chef'
+  | 'Recluse'
+  | 'Spy';
 
 type Role = {
   id: number,

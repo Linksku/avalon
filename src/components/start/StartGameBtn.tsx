@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack';
 import shuffle from 'lodash/shuffle';
 
 import { useStore } from '../../stores/Store';
+import roles from '../../consts/roles';
 
 import styles from './StartGameBtn.module.scss';
 
@@ -70,11 +71,24 @@ function getStrengthStr(strengthDiff: number) {
   return 'Strongly favors Good';
 }
 
+function randInfo(players: { player: Player, role: Role }[], curPlayer: Player) {
+  const otherPlayerNames = shuffle(players.map(p => p.player.name).filter(n => n !== curPlayer.name));
+  return `Subtly glance at ${otherPlayerNames[0]} and ${otherPlayerNames[1]}`;
+}
+
 function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
   const shuffledRoles = shuffle([...selectedRoles]);
-
   for (const player of players.values()) {
     player.roleId = shuffledRoles.pop()?.id;
+  }
+
+  const playersArr = [...players.values()].map(p => ({
+    player: p,
+    role: roles.get(p.roleId as number) as Role,
+  }));
+  for (const p of playersArr) {
+    p.player.info = p.role.getInfo?.(playersArr, p.player)
+      ?? randInfo(playersArr, p.player);
   }
 }
 

@@ -13,6 +13,7 @@ export default function PlayersSelector() {
     <div className={styles.container}>
       <h2>Players</h2>
 
+      <p>Enter players in the seating order</p>
       {playerIds.map((id, idx) => {
         const player = players.get(id);
         return (

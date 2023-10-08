@@ -4,18 +4,18 @@
 
 .roles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
 }
 
 .role {
   text-align: center;
   cursor: pointer;
-  align-self: flex-start;
 }
 
 .cardContent {
   background-color: #fcfcfc;
+  min-height: 100%;
 }
 
 .name {
