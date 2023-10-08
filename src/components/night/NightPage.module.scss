@@ -6,7 +6,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
-  padding: 1rem;
+  padding: 0 1rem 1rem 1rem;
 }
 
 .role {
@@ -23,7 +23,7 @@
 
 
 .players {
-  padding: 1rem 1rem 2rem 1rem;
+  padding: 0 1rem 1rem 1rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
@@ -66,4 +66,8 @@
 
 .playerSlideUpShown {
   transform: translateY(0);
+}
+
+.assassination {
+  padding: 0 1rem 2rem 1rem;
 }

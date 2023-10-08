@@ -28,9 +28,14 @@ type StableTypes = Primitive
 type StableDependencyList = ReadonlyArray<StableTypes>;
 
 // Doesn't work with generics: https://stackoverflow.com/questions/51300602
-type StableObjShallow<Obj extends ObjectOf<any>> = {
-  [K in keyof Obj]: Stable<Obj[K]>;
-};
+type StableObjShallow<Obj extends ObjectOf<any>> =
+  Obj extends StableTypes ? Obj
+  : Obj extends Set<any> ? Stable<Obj>
+  : Obj extends Map<any, any> ? Stable<Obj>
+  : Obj extends BuiltInObjects ? Obj
+  : {
+    [K in keyof Obj]: Stable<Obj[K]>;
+  };
 
 type StableDeep<T> =
   T extends Primitive ? T

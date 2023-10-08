@@ -13,6 +13,51 @@ import TopBar from '../TopBar';
 import styles from './NightPage.module.scss';
 import clsx from 'clsx';
 
+const AssassinationSection = React.memo(function AssassinationSection({ selectedRoles }: {
+  selectedRoles: Set<Role>,
+}) {
+  const rolesArr = useMemo(() => [...selectedRoles], [selectedRoles]);
+  const untrustworthy = rolesArr.find(role => role.name === 'Untrustworthy Servant');
+  const hasMerlin = rolesArr.some(role => role.name === 'Merlin');
+  const assassin = useMemo(
+    () => (rolesArr.find(role => role.name === 'Assassin')
+      ?? shuffle(rolesArr.filter(role => role.isEvil))[0]),
+    [rolesArr],
+  );
+  const numPowerGoods = rolesArr
+    .filter(role => role.name !== 'Villager'
+      && role.name !== 'Merlin'
+      && role.name !== 'Percival')
+    .length;
+  const numGoods = rolesArr.filter(role => !role.isEvil).length;
+  const hasDrunk = rolesArr.some(role => role.name === 'Drunk');
+
+  return untrustworthy || hasMerlin || numPowerGoods >= numGoods / 2
+    ? (
+      <>
+        <h2 className={styles.title}>Assassination</h2>
+        <div className={styles.assassination}>
+          <p>If Good wins 3 Quests:</p>
+          <ol>
+            {untrustworthy && (
+              <li>Assassin guesses Untrustworthy Servant to recruit</li>
+            )}
+            {hasMerlin && (
+              <li>{assassin.name} guesses Merlin to win</li>
+            )}
+            {numPowerGoods >= numGoods / 2 && (
+              <li>Evil guesses half of Goods to win</li>
+            )}
+          </ol>
+          {hasDrunk && (
+            <p>Guessing Drunk as their fake role counts</p>
+          )}
+        </div>
+      </>
+    )
+  : null;
+});
+
 const PlayerSlideUp = React.memo(function PlayerSlideUp({ player, role, onClose }: {
   player?: Player | null,
   role?: Role | null,
@@ -141,6 +186,8 @@ export default function NightPage() {
           </Card>
         ))}
       </div>
+
+      <AssassinationSection selectedRoles={selectedRoles} />
 
       <PlayerSlideUp
         player={shownPlayer}
