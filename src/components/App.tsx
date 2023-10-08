@@ -1,6 +1,6 @@
 import { useStore } from '../stores/Store';
 import StartPage from './start/StartPage';
-import NightPage from './NightPage';
+import NightPage from './night/NightPage';
 import QuestsPage from './QuestsPage';
 import AssassinationPage from './AssassinationPage';
 

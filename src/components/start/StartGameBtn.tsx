@@ -1,4 +1,6 @@
 import clsx from 'clsx';
+import shuffle from 'lodash/shuffle';
+
 import { useStore } from '../../stores/Store';
 
 import styles from './StartGameBtn.module.scss';
@@ -56,7 +58,11 @@ function getErrMsg(players: Map<number, Player>, selectedRoles: Set<Role>) {
 }
 
 function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
+  const shuffledRoles = shuffle([...selectedRoles]);
 
+  for (const player of players.values()) {
+    player.roleId = shuffledRoles.pop()?.id;
+  }
 }
 
 export default function StartGameBtn() {

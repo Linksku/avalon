@@ -1,3 +1,15 @@
+let rolesMap: Map<number, Role>;
+
+function formatNamesList(prefix: string, names: string[]) {
+  if (!names.length) {
+    return null;
+  }
+  if (names.length === 1) {
+    return `${prefix} is ${names[0]}`;
+  }
+  return `${prefix}s are ${names.join(', ')}`;
+}
+
 const roles = [
   {
     name: 'Townsfolk',
@@ -5,9 +17,6 @@ const roles = [
     isEvil: false,
     getStrength: () => 1,
     ability: '',
-    getInfo(players) {
-      return 'todo';
-    },
   },
   {
     name: 'Minion',
@@ -16,7 +25,12 @@ const roles = [
     getStrength: () => 2,
     ability: 'Knows Evil',
     getInfo(players) {
-      return 'todo';
+      return formatNamesList(
+        'Your teammate',
+        players
+          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .map(p => p.player.name),
+      );
     },
   },
   {
@@ -26,7 +40,12 @@ const roles = [
     ability: 'Knows Evil',
     requiredRoles: ['Assassin'],
     getInfo(players) {
-      return 'todo';
+      return formatNamesList(
+        'Evil',
+        players
+          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .map(p => p.player.name),
+      );
     },
   },
   {
@@ -36,7 +55,12 @@ const roles = [
     ability: 'Knows Merlin',
     requiredRoles: ['Merlin', 'Morgana'],
     getInfo(players) {
-      return 'todo';
+      return formatNamesList(
+        'Merlin',
+        players
+          .filter(p => p.role.name === 'Merlin' || p.role.name === 'Morgana')
+          .map(p => p.player.name),
+      );
     },
   },
   {
@@ -46,17 +70,12 @@ const roles = [
     ability: 'Assassinates Merlin',
     requiredRoles: ['Merlin'],
     getInfo(players) {
-      return 'todo';
-    },
-  },
-  {
-    name: 'Mordred',
-    isEvil: true,
-    getStrength: roles => 2 + (roles.filter(r => !r.isEvil).length / 2),
-    ability: 'Unknown to Merlin',
-    requiredRoles: ['Merlin'],
-    getInfo(players) {
-      return 'todo';
+      return formatNamesList(
+        'Your teammate',
+        players
+          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .map(p => p.player.name),
+      );
     },
   },
   {
@@ -66,7 +85,27 @@ const roles = [
     ability: 'Appears as Merlin',
     requiredRoles: ['Merlin', 'Percival'],
     getInfo(players) {
-      return 'todo';
+      return formatNamesList(
+        'Your teammate',
+        players
+          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .map(p => p.player.name),
+      );
+    },
+  },
+  {
+    name: 'Mordred',
+    isEvil: true,
+    getStrength: roles => 2 + (roles.filter(r => !r.isEvil).length / 2),
+    ability: 'Unknown to Merlin',
+    requiredRoles: ['Merlin'],
+    getInfo(players) {
+      return formatNamesList(
+        'Your teammate',
+        players
+          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .map(p => p.player.name),
+      );
     },
   },
   {
@@ -74,14 +113,11 @@ const roles = [
     isEvil: true,
     getStrength: () => 1,
     ability: 'Unknown to Evil, doesn\'t know Evil',
-    getInfo(players) {
-      return 'todo';
-    },
   },
 ] satisfies (Omit<Role, 'id'> & { maxCount?: number })[];
 
 let nextId = 1;
-const rolesArr = roles.flatMap(
+rolesMap = new Map(roles.flatMap(
   ({ maxCount, ...role }) => Array.from({ length: maxCount ?? 1 }).map(() => [
     nextId,
     {
@@ -89,6 +125,6 @@ const rolesArr = roles.flatMap(
       ...role,
     },
   ] as [number, Role]),
-);
+));
 
-export default new Map(rolesArr);
+export default rolesMap;

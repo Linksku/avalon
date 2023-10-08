@@ -1,6 +1,6 @@
 import { useStore } from '../../stores/Store';
 
-import styles from './PlayersSelector.module.css';
+import styles from './PlayersSelector.module.scss';
 
 export default function PlayersSelector() {
   const { players, setPlayers } = useStore();
