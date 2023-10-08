@@ -6,13 +6,12 @@ import { useStore } from '../../stores/Store';
 import styles from './PlayersSelector.module.scss';
 
 export default React.memo(function PlayersSelector() {
-  const { players, setPlayers } = useStore();
+  const { players, setPlayers, numResets } = useStore();
 
   const playerIds = [...players.values()].map(p => p.id);
   const nextId = Math.max(0, ...playerIds) + 1;
-  console.log(playerIds, nextId);
   return (
-    <div className={styles.container}>
+    <div key={numResets} className={styles.container}>
       <h2>Players</h2>
 
       <p>Enter players in the seating order.</p>
@@ -22,12 +21,11 @@ export default React.memo(function PlayersSelector() {
           <TextField
             key={id}
             label={`P${idx + 1}`}
-            defaultValue={player?.name}
-            onChange={event => {
-              const name = event.target.value.trim();
-              if (name && !players.has(id)) {
+            defaultValue={player?.name ?? ''}
+            onFocus={() => {
+              if (!players.has(id)) {
                 const newPlayers = new Map(players);
-                newPlayers.set(id, { id, name });
+                newPlayers.set(id, { id, name: '' });
                 setPlayers(newPlayers);
               }
             }}
@@ -45,23 +43,10 @@ export default React.memo(function PlayersSelector() {
             }}
             onKeyDown={event => {
               const elem = event.target as HTMLInputElement;
-              const name = elem.value.trim();
               if (event.code === 'Enter') {
-                if (idx === playerIds.length - 1) {
-                  const newPlayers = new Map(players);
-                  newPlayers.set(id, { id, name });
-                  setPlayers(newPlayers);
-
-                  setTimeout(() => {
-                    const inputs = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
-                    const idx = [...inputs].indexOf(elem);
-                    inputs[idx + 1]?.focus();
-                  }, 0);
-                } else {
-                  const inputs = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
-                  const idx = [...inputs].indexOf(elem);
-                  inputs[idx + 1]?.focus();
-                }
+                const inputs = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
+                const idx = [...inputs].indexOf(elem);
+                inputs[idx + 1]?.focus();
               }
             }}
             fullWidth

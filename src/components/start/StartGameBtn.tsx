@@ -105,6 +105,7 @@ export default React.memo(function StartGameBtn() {
     selectedRoles,
     setSelectedRoles,
     setGameState,
+    setNumResets,
   } = useStore();
 
   const selectedRolesArr = Array.from(selectedRoles);
@@ -145,6 +146,7 @@ export default React.memo(function StartGameBtn() {
               onClick={() => {
                 setPlayers(new Map());
                 setSelectedRoles(new Set());
+                setNumResets(n => n + 1);
               }}
             >
               Reset

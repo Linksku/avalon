@@ -42,6 +42,7 @@ export const [
       }
     }, []);
     const [gameState, _setGameState] = useState<GameState>(defaultState?.gameState ?? 'start');
+    const [numResets, setNumResets] = useState(0);
     const [players, setPlayers] = useState(defaultState?.players ?? new Map<number, Player>());
     const [selectedRoles, setSelectedRoles] = useState(defaultState?.selectedRoles ?? new Set<Role>());
 
@@ -60,6 +61,8 @@ export const [
     return {
       gameState,
       setGameState,
+      numResets,
+      setNumResets,
       players,
       setPlayers,
       selectedRoles,
