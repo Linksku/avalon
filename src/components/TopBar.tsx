@@ -11,25 +11,27 @@ export default React.memo(function TopBar() {
 
   return (
     <div className={styles.container}>
-      <h1>Avalon 2.0</h1>
+      <div className={styles.inner}>
+        <h1>Avalon 2.0</h1>
 
-      <div className={styles.right}>
-        <IconButton
-          size="large"
-          onClick={() => {
-            if (window.confirm('Quit game?')) {
-              localStorage.removeItem('avalonState');
-              for (const player of players.values()) {
-                delete player.roleId;
-                delete player.isPoisoned;
-                delete player.drunkAs;
+        <div className={styles.right}>
+          <IconButton
+            size="large"
+            onClick={() => {
+              if (window.confirm('Quit game?')) {
+                localStorage.removeItem('avalonState');
+                for (const player of players.values()) {
+                  delete player.roleId;
+                  delete player.isPoisoned;
+                  delete player.drunkAs;
+                }
+                setGameState('start');
               }
-              setGameState('start');
-            }
-          }}
-        >
-          <DoorOpenSvg className={styles.doorSvg} />
-        </IconButton>
+            }}
+          >
+            <DoorOpenSvg className={styles.doorSvg} />
+          </IconButton>
+        </div>
       </div>
     </div>
   );

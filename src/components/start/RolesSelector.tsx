@@ -116,16 +116,20 @@ export default React.memo(function RolesSelector() {
                     })}
                   >
                     <CardContent className={styles.cardContent}>
-                      <h3 className={styles.name}>
-                        {role.name}
-                        <span> &middot; {role.getStrength(selectedRolesArr)}</span>
-                      </h3>
-                      {role.ability && <div>{role.ability}</div>}
+                      <div className={styles.nameWrap}>
+                        <h3 className={styles.name}>
+                          {role.name}
+                        </h3>
+                        <div className={styles.strength}>
+                          {role.getStrength(selectedRolesArr)}
+                        </div>
+                      </div>
+                      {role.ability && <div className={styles.ability}>{role.ability}</div>}
                     </CardContent>
                   </Card>
                 );
               })}
-              {Array.from({ length: 10 }).map((_, i) => (
+              {Array.from({ length: 3 }).map((_, i) => (
                 <div key={i} />
               ))}
             </div>

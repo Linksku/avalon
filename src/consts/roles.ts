@@ -138,7 +138,7 @@ const roles = [
     group: 'avalon',
     name: 'Oberon',
     isEvil: true,
-    getStrength: () => 1,
+    getStrength: roles => 2.5 - (roles.filter(r => r.isEvil).length / 2),
     ability: 'Unknown to Evil, doesn\'t know Evil',
   },
   {
@@ -281,14 +281,16 @@ const roles = [
     group: 'botc',
     name: 'Drunk',
     isEvil: false,
-    getStrength: (roles) => (roles.filter(r => !r.isEvil).length > 4 ? -1.5 : -1),
+    getStrength: roles => (roles.find(r => r.name === 'Merlin')
+      ? -2
+      : roles.filter(r => !r.isEvil).length > 4 ? -1.5 : -1),
     ability: 'Gets Good role with random info',
   },
   {
     group: 'botc',
     name: 'Recluse',
     isEvil: false,
-    getStrength: (roles) => (roles.filter(r => r.isEvil).length > 2 ? 0 : 0.5),
+    getStrength: roles => (roles.filter(r => r.isEvil).length > 2 ? 0 : 0.5),
     ability: 'Appears as Evil to Good',
   },
   {
@@ -311,7 +313,7 @@ const roles = [
     group: 'botc',
     name: 'No Dashii',
     isEvil: true,
-    getStrength: (roles) => (roles.filter(r => !r.isEvil).length > 4 ? 3.5 : 3),
+    getStrength: roles => (roles.filter(r => !r.isEvil).length > 4 ? 3.5 : 3),
     ability: 'A Good neighbor knows random info',
     getInfo(players, curPlayer) {
       return formatNamesList(

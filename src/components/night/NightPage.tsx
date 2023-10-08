@@ -50,7 +50,7 @@ const AssassinationSection = React.memo(function AssassinationSection({ selected
             )}
           </ol>
           {hasDrunk && (
-            <p>Guessing Drunk as their fake role counts</p>
+            <p>* Can guess Drunk as their fake role</p>
           )}
         </div>
       </>
@@ -76,28 +76,38 @@ const PlayerSlideUp = React.memo(function PlayerSlideUp({ player, role, onClose 
 
   const drunkAsRole = player?.drunkAs ? roles.get(player.drunkAs) : null;
   return (
-    <div
-      className={clsx(styles.playerSlideUp, {
-        [styles.playerSlideUpShown]: !!(player && role),
-      })}
-    >
-      {player && role && (
-        <>
-          <h3>{player.name}</h3>
-          <h4>{drunkAsRole?.name ?? role.name} &middot; {(drunkAsRole?.isEvil ?? role.isEvil) ? 'Evil' : 'Good'}</h4>
-          <p>{drunkAsRole?.ability ?? role.ability}</p>
-          <p>{player.info}</p>
-        </>
-      )}
-      <Button
-        variant="contained"
-        size="large"
-        disabled={hideablePlayer !== player?.id}
+    <>
+      <div
+        className={clsx(styles.playerSlideUpOverlay, {
+          [styles.playerSlideUpOverlayShown]: !!(player && role),
+        })}
         onClick={onClose}
+      />
+      <div
+        className={clsx(styles.playerSlideUp, {
+          [styles.playerSlideUpShown]: !!(player && role),
+        })}
       >
-        Hide
-      </Button>
-    </div>
+        <div className={styles.playerSlideUpInner}>
+          {player && role && (
+            <>
+              <h3>{player.name}</h3>
+              <h4>{drunkAsRole?.name ?? role.name} &middot; {(drunkAsRole?.isEvil ?? role.isEvil) ? 'Evil' : 'Good'}</h4>
+              <p>{drunkAsRole?.ability ?? role.ability}</p>
+              <p>{player.info}</p>
+            </>
+          )}
+          <Button
+            variant="contained"
+            size="large"
+            disabled={hideablePlayer !== player?.id}
+            onClick={onClose}
+          >
+            Hide
+          </Button>
+        </div>
+      </div>
+    </>
   );
 });
 
@@ -124,70 +134,75 @@ export default function NightPage() {
     <>
       <TopBar />
 
-      <h2 className={styles.title}>Roles in Game</h2>
-      <div className={styles.roles}>
-        {shuffledRoles.current.map(role => (
-          <Card
-            key={role.id}
-            elevation={2}
-            className={styles.role}
-          >
-            <CardContent>
-              <h3
-                className={clsx(styles.roleName, {
-                  [styles.roleNameEvil]: role.isEvil,
-                })}
-              >
-                {role.name}
-              </h3>
-              {role.ability && <div>{role.ability}</div>}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <div className={styles.main}>
+        <h2 className={styles.title}>Roles in Game</h2>
+        <div className={styles.roles}>
+          {shuffledRoles.current.map(role => (
+            <Card
+              key={role.id}
+              elevation={2}
+              className={styles.role}
+            >
+              <CardContent className={styles.cardContent}>
+                <h3
+                  className={clsx(styles.roleName, {
+                    [styles.roleNameEvil]: role.isEvil,
+                  })}
+                >
+                  {role.name}
+                </h3>
+                {role.ability && <div className={styles.ability}>{role.ability}</div>}
+              </CardContent>
+            </Card>
+          ))}
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} />
+          ))}
+        </div>
 
-      <h2 className={styles.title}>Player Roles</h2>
-      <div className={styles.players}>
-        {[...players.values()].map(player => (
-          <Card
-            key={player.id}
-            elevation={2}
-            onPointerDown={() => {
-              if (longPressTimer.current) {
-                clearTimeout(longPressTimer.current);
-              }
-              if (!shownPlayer) {
-                longPressTimer.current = setTimeout(() => {
-                  setSeenPlayers(new Set([...seenPlayers, player.id]));
-                  setShownPlayer(player);
-                }, 500) as unknown as number;
-              }
-            }}
-            onPointerCancel={() => {
-              if (longPressTimer.current) {
-                clearTimeout(longPressTimer.current);
-              }
-            }}
-            onPointerUp={() => {
-              if (longPressTimer.current) {
-                clearTimeout(longPressTimer.current);
-              }
-            }}
-            className={clsx(styles.player, {
-              [styles.playerFaded]: shownPlayer && shownPlayer.id !== player.id,
-            })}
-          >
-            <CardContent>
-              <h3>{player.name}</h3>
-              {seenPlayers.has(player.id)
-                ? <CheckSvg className={styles.checkSvg} />
-                : <div className={styles.holdToReveal}>Hold to reveal</div>}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+        <h2 className={styles.title}>Player Roles</h2>
+        <div className={styles.players}>
+          {[...players.values()].map(player => (
+            <Card
+              key={player.id}
+              elevation={2}
+              onPointerDown={() => {
+                if (longPressTimer.current) {
+                  clearTimeout(longPressTimer.current);
+                }
+                if (!shownPlayer) {
+                  longPressTimer.current = setTimeout(() => {
+                    setSeenPlayers(new Set([...seenPlayers, player.id]));
+                    setShownPlayer(player);
+                  }, 500) as unknown as number;
+                }
+              }}
+              onPointerCancel={() => {
+                if (longPressTimer.current) {
+                  clearTimeout(longPressTimer.current);
+                }
+              }}
+              onPointerUp={() => {
+                if (longPressTimer.current) {
+                  clearTimeout(longPressTimer.current);
+                }
+              }}
+              className={clsx(styles.player, {
+                [styles.playerFaded]: shownPlayer && shownPlayer.id !== player.id,
+              })}
+            >
+              <CardContent>
+                <h3>{player.name}</h3>
+                {seenPlayers.has(player.id)
+                  ? <CheckSvg className={styles.checkSvg} />
+                  : <div className={styles.holdToReveal}>Hold to reveal</div>}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-      <AssassinationSection selectedRoles={selectedRoles} />
+        <AssassinationSection selectedRoles={selectedRoles} />
+      </div>
 
       <PlayerSlideUp
         player={shownPlayer}

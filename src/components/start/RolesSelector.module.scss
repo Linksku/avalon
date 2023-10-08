@@ -1,5 +1,8 @@
 .container {
   padding: 1rem;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .randomizeBtn {
@@ -8,7 +11,7 @@
 
 .roles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
   margin-bottom: 2rem;
 }
@@ -22,20 +25,37 @@
   background-color: #fcfcfc;
   transition: background-color 0.2s;
   min-height: 100%;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.nameWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.strength {
+  flex-shrink: 0;
+  margin-left: 8px;
+  font-size: 0.9em;
+  color: #666;
 }
 
 .name {
+  flex-shrink: 1;
   color: #1976D2;
   transition: color 0.2s;
+  margin: 0;
 
   &:last-child {
     margin-bottom: 0;
   }
+}
 
-  span {
-    font-weight: 400;
-    font-size: 0.9em;
-  }
+.ability {
+  font-size: 0.9em;
 }
 
 .evil .name {

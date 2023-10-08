@@ -125,34 +125,36 @@ export default React.memo(function StartGameBtn() {
         className={styles.padding}
       />
       <div className={styles.container}>
-        <p>
-          {errMsg ?? `${getStrengthStr(strengthDiff)} (${strengthDiff < 0 ? '' : '+'}${strengthDiff})`}
-        </p>
-        <Stack direction="row" spacing={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            disabled={!!errMsg}
-            onClick={() => {
-              assignRoles(players, selectedRoles);
-              setGameState('night');
-            }}
-          >
-            Start Game
-          </Button>
+        <div className={styles.inner}>
+          <p>
+            {errMsg ?? `${getStrengthStr(strengthDiff)} (${strengthDiff < 0 ? '' : '+'}${strengthDiff})`}
+          </p>
+          <Stack direction="row" spacing={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              disabled={!!errMsg}
+              onClick={() => {
+                assignRoles(players, selectedRoles);
+                setGameState('night');
+              }}
+            >
+              Start Game
+            </Button>
 
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              setPlayers(new Map());
-              setSelectedRoles(new Set());
-            }}
-          >
-            Reset
-          </Button>
-        </Stack>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                setPlayers(new Map());
+                setSelectedRoles(new Set());
+              }}
+            >
+              Reset
+            </Button>
+          </Stack>
+        </div>
       </div>
     </>
   );

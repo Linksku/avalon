@@ -1,16 +1,29 @@
+.main {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .title {
   margin: 1rem;
 }
 
 .roles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
   padding: 0 1rem 1rem 1rem;
 }
 
 .role {
   text-align: center;
+}
+
+.cardContent {
+  background-color: #fcfcfc;
+  min-height: 100%;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .roleName {
@@ -21,6 +34,9 @@
   color: #D32F2F;
 }
 
+.ability {
+  font-size: 0.9em;
+}
 
 .players {
   padding: 0 1rem 1rem 1rem;
@@ -48,6 +64,20 @@
   color: #999;
 }
 
+.playerSlideUpOverlay {
+  background-color: rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+}
+
+.playerSlideUpOverlayShown {
+  display: block;
+}
+
 .playerSlideUp {
   position: fixed;
   left: 0;
@@ -55,13 +85,19 @@
   bottom: 0;
   max-height: 80%;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1.5rem 1rem 2rem 1rem;
   border-top: 1px solid #ddd;
   background-color: #fff;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   z-index: 999;
   transform: translateY(100%);
   transition: transform 0.2s;
+}
+
+.playerSlideUpInner {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .playerSlideUpShown {

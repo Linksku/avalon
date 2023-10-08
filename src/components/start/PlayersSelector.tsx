@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import TextField from '@mui/material/TextField';
 
 import { useStore } from '../../stores/Store';
@@ -8,7 +8,7 @@ import styles from './PlayersSelector.module.scss';
 export default React.memo(function PlayersSelector() {
   const { players, setPlayers } = useStore();
 
-  const nextId = Math.round(performance.now());
+  const nextId = useMemo(() => Math.max(...[...players.values()].map(p => p.id)) + 1, [players]);
   const playerIds = [...[...players.values()].map(p => p.id), nextId];
   return (
     <div className={styles.container}>
@@ -45,13 +45,16 @@ export default React.memo(function PlayersSelector() {
             onKeyDown={event => {
               const elem = event.target as HTMLInputElement;
               if (event.code === 'Enter') {
-                const inputs = document.querySelectorAll('input');
+                const inputs = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
                 const idx = [...inputs].indexOf(elem);
                 inputs[idx + 1]?.focus();
               }
             }}
             fullWidth
             margin="normal"
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
         );
       })}
