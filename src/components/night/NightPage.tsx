@@ -3,6 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { ReactComponent as CheckSvg } from 'fontawesome-svgs/svg/check-circle-light.svg';
+import shuffle from 'lodash/shuffle';
 
 import { useStore } from '../../stores/Store';
 import roles from '../../consts/roles';
@@ -59,15 +60,38 @@ export default function NightPage() {
   const shownRole = shownPlayer?.roleId ? roles.get(shownPlayer.roleId) : null;
   const [seenPlayers, setSeenPlayers] = useState(new Set<number>());
   const longPressTimer = useRef<number | null>(null);
+  const shuffledPlayers = useRef(shuffle([...players.values()]));
 
-  const playersArr = [...players.values()].map(p => ({
-    player: p,
-    role: roles.get(p.roleId as number) as Role,
-  }));
   return (
     <>
       <TopBar />
 
+      <h2 className={styles.title}>Roles in Game</h2>
+      <div className={styles.roles}>
+        {shuffledPlayers.current.map(player => {
+          const role = roles.get(player.roleId as number) as Role;
+          return (
+            <Card
+              key={role.id}
+              elevation={2}
+              className={styles.role}
+            >
+              <CardContent>
+                <h3
+                  className={clsx(styles.roleName, {
+                    [styles.roleNameEvil]: role.isEvil,
+                  })}
+                >
+                  {role.name}
+                </h3>
+                {role.ability && <div>{role.ability}</div>}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <h2 className={styles.title}>Player Roles</h2>
       <div className={styles.players}>
         {[...players.values()].map(player => (
           <Card
@@ -79,6 +103,7 @@ export default function NightPage() {
               }
               if (!shownPlayer) {
                 longPressTimer.current = setTimeout(() => {
+                  setSeenPlayers(new Set([...seenPlayers, player.id]));
                   setShownPlayer(player);
                 }, 500) as unknown as number;
               }
@@ -112,9 +137,6 @@ export default function NightPage() {
         role={shownRole}
         onClose={() => {
           setShownPlayer(null);
-          if (shownPlayer) {
-            setSeenPlayers(new Set([...seenPlayers, shownPlayer.id]));
-          }
         }}
       />
     </>
