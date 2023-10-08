@@ -68,7 +68,13 @@ export default React.memo(function RolesSelector() {
                 const newSelected = remainingRoles.pop()!;
                 if (newSelected.requiredRoles) {
                   for (const r of newSelected.requiredRoles) {
-                    selected.add([...roles.values()].find(r2 => r2.name === r)!);
+                    const idx = remainingRoles.findIndex(
+                      r2 => r2.name === r && r2 !== newSelected,
+                    );
+                    if (idx >= 0) {
+                      selected.add(remainingRoles[idx]);
+                      remainingRoles.splice(idx, 1);
+                    }
                   }
                 }
                 selected.add(newSelected);
@@ -81,6 +87,7 @@ export default React.memo(function RolesSelector() {
                   : sum + role.getStrength(selectedArr)),
                 0,
               );
+              console.log(strengthDiff, selectedArr.map(r => r.name));
               if (Math.abs(strengthDiff) < 1 && !getRolesErr(players, selected)) {
                 setSelectedRoles(selected);
                 break;
