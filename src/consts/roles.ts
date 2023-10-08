@@ -282,7 +282,7 @@ const roles = [
     name: 'Drunk',
     isEvil: false,
     getStrength: (roles) => (roles.filter(r => !r.isEvil).length > 4 ? -1.5 : -1),
-    ability: 'A Good role is poisoned',
+    ability: 'Gets Good role with random info',
   },
   {
     group: 'botc',
@@ -312,7 +312,7 @@ const roles = [
     name: 'No Dashii',
     isEvil: true,
     getStrength: (roles) => (roles.filter(r => !r.isEvil).length > 4 ? 3.5 : 3),
-    ability: 'A Good neighbor is poisoned',
+    ability: 'A Good neighbor knows random info',
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
@@ -356,7 +356,7 @@ const roles = [
     name: 'Doppleganger',
     isEvil: false,
     getStrength: () => 1.5,
-    ability: 'Knows a random Good\'s information',
+    ability: 'Knows a random Good\'s info',
     getInfo(players, curPlayer) {
       const shuffled = shuffle(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.player.info,

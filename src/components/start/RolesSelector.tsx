@@ -2,11 +2,15 @@ import React from 'react';
 import clsx from 'clsx';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import shuffle from 'lodash/shuffle';
 
 import roles from '../../consts/roles';
 import { useStore } from '../../stores/Store';
 
 import styles from './RolesSelector.module.scss';
+import getRolesErr from './getRolesErr';
 
 const ROLE_GROUPS = {
   base: 'Base',
@@ -18,7 +22,7 @@ const ROLE_GROUPS = {
 };
 
 export default React.memo(function RolesSelector() {
-  const { selectedRoles, setSelectedRoles } = useStore();
+  const { players, selectedRoles, setSelectedRoles } = useStore();
   const selectedRolesArr = Array.from(selectedRoles);
 
   function handleClickRole(role: Role, selected: boolean) {
@@ -53,6 +57,44 @@ export default React.memo(function RolesSelector() {
   return (
     <div className={styles.container}>
       <h2>Roles</h2>
+
+      <div className={styles.randomizeBtn}>
+        <Button
+          onClick={() => {
+            const drunk = [...roles.values()].find(role => role.name === 'Drunk')!;
+            while (true) {
+              const selected = new Set<Role>();
+              const remainingRoles = shuffle([...roles.values()]);
+              while (selected.size - (selected.has(drunk) ? 1 : 0) < players.size) {
+                const newSelected = remainingRoles.pop()!;
+                selected.add(newSelected);
+                if (newSelected.requiredRoles) {
+                  for (const r of newSelected.requiredRoles) {
+                    selected.add([...roles.values()].find(r2 => r2.name === r)!);
+                  }
+                }
+              }
+
+              const selectedArr = Array.from(selected);
+              const strengthDiff = selectedArr.reduce(
+                (sum, role) => (role.isEvil
+                  ? sum - role.getStrength(selectedArr)
+                  : sum + role.getStrength(selectedArr)),
+                0,
+              );
+              if (Math.abs(strengthDiff) < 1 && !getRolesErr(players, selected)) {
+                setSelectedRoles(selected);
+                break;
+              }
+            }
+          }}
+          variant="contained"
+          color="primary"
+        >
+          Randomize
+        </Button>
+      </div>
+
       {Object.entries(ROLE_GROUPS).map(([key, name]) => {
         const groupRoles = [...roles.values()].filter(r => r.group === key);
         if (!groupRoles.length) {

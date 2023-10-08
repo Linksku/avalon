@@ -5,58 +5,9 @@ import shuffle from 'lodash/shuffle';
 
 import { useStore } from '../../stores/Store';
 import roles from '../../consts/roles';
+import getRolesErr from './getRolesErr';
 
 import styles from './StartGameBtn.module.scss';
-
-const NUM_EVILS = new Map([
-  [5, 2],
-  [6, 2],
-  [7, 3],
-  [8, 3],
-  [9, 3],
-  [10, 4],
-]);
-
-function getErrMsg(players: Map<number, Player>, selectedRoles: Set<Role>) {
-  if (players.size < 5) {
-    return 'Enter players';
-  }
-  if (players.size > 10) {
-    return 'Too many players';
-  }
-  if (new Set([...players.values()].map(p => p.name)).size !== players.size) {
-    return 'Duplicate names';
-  }
-
-  if (!selectedRoles.size) {
-    return 'Select roles';
-  }
-  const roleNames = [...selectedRoles].map(r => r.name);
-
-  const numGoods = [...selectedRoles].filter(r => !r.isEvil).length
-    - (roleNames.includes('Drunk') ? 1 : 0);
-  if (numGoods !== players.size - (NUM_EVILS.get(players.size) as number)) {
-    return `Need ${players.size - (NUM_EVILS.get(players.size) as number)} good`;
-  }
-  const numEvils = [...selectedRoles].filter(r => r.isEvil).length;
-  if (numEvils !== NUM_EVILS.get(players.size)) {
-    return `Need ${NUM_EVILS.get(players.size)} evil`;
-  }
-  if (selectedRoles.size - (roleNames.includes('Drunk') ? 1 : 0) < players.size) {
-    return `Missing ${players.size - selectedRoles.size} role${players.size - selectedRoles.size === 1 ? '' : 's'}`;
-  }
-
-  for (const role of selectedRoles) {
-    if (role.requiredRoles && !role.requiredRoles.every(r => roleNames.includes(r))) {
-      return `${role.name} requires ${role.requiredRoles.join(', ')}`;
-    }
-    if (role.name === 'Merlin' && !roleNames.includes('Assassin') && roleNames.includes('Minion')) {
-      return 'Merlin requires Assassin';
-    }
-  }
-
-  return null;
-}
 
 function getStrengthStr(strengthDiff: number) {
   if (strengthDiff <= -2) {
@@ -161,7 +112,7 @@ export default React.memo(function StartGameBtn() {
       : sum + role.getStrength(selectedRolesArr)),
     0,
   );
-  const errMsg = getErrMsg(players, selectedRoles);
+  const errMsg = getRolesErr(players, selectedRoles);
   return (
     <>
       <div
@@ -188,7 +139,6 @@ export default React.memo(function StartGameBtn() {
           <Button
             variant="contained"
             color="error"
-            size="large"
             onClick={() => {
               setPlayers(new Map());
               setSelectedRoles(new Set());
