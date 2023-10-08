@@ -28,6 +28,7 @@ type RoleName =
   | 'Noble'
   | 'Chef'
   | 'Drunk'
+  | 'Puzzlemaster'
   | 'Recluse'
   | 'Spy'
   | 'No Dashii'
@@ -49,6 +50,7 @@ type Role = {
   minPlayers?: number,
   requiredRoles?: RoleName[],
   getInfo?: (players: { player: Player, role: Role }[], curPlayer: Player) => string | null,
+  secondPassInfo?: boolean,
 };
 
 type Player = {

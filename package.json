@@ -3,7 +3,42 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://linksku.github.io/avalon",
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      "last 3 years",
+      "last 1 version and last 10 years",
+      "not < 0.1%",
+      "not ie > 0",
+      "not op_mini all",
+      "not and_qq > 0",
+      "not and_uc > 0"
+    ],
+    "development": [
+      "last 3 years",
+      "last 1 version and last 10 years",
+      "not < 0.1%",
+      "not ie > 0",
+      "not op_mini all",
+      "not and_qq > 0",
+      "not and_uc > 0"
+    ]
+  },
   "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.12",
@@ -28,31 +63,5 @@
     "sass": "^1.69.0",
     "typescript": "^5.2.2",
     "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }

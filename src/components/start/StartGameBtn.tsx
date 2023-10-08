@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import shuffle from 'lodash/shuffle';
 
 import { useStore } from '../../stores/Store';
-import roles from '../../consts/roles';
+import roles, { getPoisonedRandPlayers } from '../../consts/roles';
 import getRolesErr from './getRolesErr';
 
 import styles from './StartGameBtn.module.scss';
@@ -54,7 +54,9 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
     drunk.player.drunkAs = drunk.role.id;
     drunk.player.roleId = [...selectedRoles].find(r => r.name === 'Drunk')!.id;
     drunk.player.isPoisoned = true;
+    drunk.role = roles.get(drunk.player.roleId)!;
   }
+
   if (roleNames.includes('No Dashii')) {
     const idx = playersArr.findIndex(p => p.role.name === 'No Dashii');
     const left = playersArr[idx === 0 ? playersArr.length - 1 : idx - 1];
@@ -77,23 +79,17 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
       const role = p.player.drunkAs
         ? roles.get(p.player.drunkAs)!
         : p.role;
-      const shuffledRoles = shuffle(playersArr.map(p => p.role));
-      const randPlayers = playersArr.map(p => ({
-        player: p.player,
-        role: shuffledRoles.pop()!,
-      }));
+      const randPlayers = getPoisonedRandPlayers(playersArr);
       p.player.info = role.getInfo?.(randPlayers, p.player) ?? undefined;
     } else {
       p.player.info = p.role.getInfo?.(playersArr, p.player) ?? undefined;
     }
   }
 
-  const secondPass = playersArr.filter(
-    p => (['Doppleganger', 'Mystic Wolf'] as RoleName[]).includes(p.role.name),
-  );
+  const secondPass = playersArr.filter(p => p.role.secondPassInfo);
   if (secondPass.length) {
     for (const p of secondPass) {
-      p.player.info = p.role.getInfo?.(playersArr, p.player) ?? undefined;
+      p.player.info = p.role.getInfo?.(playersArr, p.player) ?? p.player.info ?? undefined;
     }
   }
 

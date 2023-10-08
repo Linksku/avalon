@@ -37,6 +37,14 @@ function appearsAsRole(
   return role.name;
 }
 
+export function getPoisonedRandPlayers(players: { player: Player, role: Role }[]) {
+  const shuffledRoles = shuffle(players.map(p => p.role));
+  return players.map(p => ({
+    player: p.player,
+    role: shuffledRoles.pop()!,
+  }));
+}
+
 const roles = [
   {
     group: 'base',
@@ -288,6 +296,32 @@ const roles = [
   },
   {
     group: 'botc',
+    name: 'Puzzlemaster',
+    isEvil: false,
+    getStrength: () => 3,
+    ability: 'Knows Drunk\'s fake and real info',
+    requiredRoles: ['Drunk'],
+    getInfo(players, curPlayer) {
+      const drunk = players.find(p => p.role.name === 'Drunk');
+      if (!drunk) {
+        return null;
+      }
+      if (drunk.player === curPlayer) {
+        const shuffled = shuffle(players.filter(
+          p => p.player !== curPlayer && !p.role.isEvil && p.role.getInfo,
+        ));
+        const fakeDrunk = shuffled[0];
+        const randPlayers1 = getPoisonedRandPlayers(players);
+        const randPlayers2 = getPoisonedRandPlayers(players);
+        return `Fake info: "${fakeDrunk.role.getInfo!(randPlayers1, fakeDrunk.player)}"\nReal info: "${fakeDrunk.role.getInfo!(randPlayers2, fakeDrunk.player)}"`;
+      }
+      const drunkAs = rolesMap.get(drunk.player.drunkAs!)!;
+      return `Fake info: "${drunk.player.info}"\nReal info: "${drunkAs.getInfo?.(players, drunk.player) ?? 'None'}"`;
+    },
+    secondPassInfo: true,
+  },
+  {
+    group: 'botc',
     name: 'Recluse',
     isEvil: false,
     getStrength: roles => (roles.filter(r => r.isEvil).length > 2 ? 0 : 0.5),
@@ -365,6 +399,7 @@ const roles = [
       ));
       return shuffled[0]?.player.info ?? null;
     },
+    secondPassInfo: true,
   },
   {
     group: 'werewolf',
@@ -398,6 +433,7 @@ const roles = [
       ));
       return shuffled[0]?.player.info ?? null;
     },
+    secondPassInfo: true,
   },
 ] satisfies (Omit<Role, 'id'> & { maxCount?: number })[];
 

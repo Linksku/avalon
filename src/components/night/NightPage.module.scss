@@ -11,16 +11,17 @@
 .roles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
+  gap: 0 1rem;
   padding: 0 1rem 1rem 1rem;
 }
 
 .role {
   text-align: center;
+  margin-bottom: 1rem;
 }
 
 .cardContent {
-  background-color: #fcfcfc;
+  background-color: #fdfdfd;
   min-height: 100%;
   padding-left: 8px;
   padding-right: 8px;
@@ -39,7 +40,7 @@
 }
 
 .players {
-  padding: 0 1rem 1rem 1rem;
+  padding: 0 1rem 2rem 1rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
@@ -102,6 +103,10 @@
 
 .playerSlideUpShown {
   transform: translateY(0);
+}
+
+.playerInfo {
+  white-space: pre-wrap;
 }
 
 .assassination {

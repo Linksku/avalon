@@ -66,12 +66,12 @@ export default React.memo(function RolesSelector() {
               const remainingRoles = shuffle([...roles.values()]);
               while (selected.size - (selected.has(drunk) ? 1 : 0) < players.size) {
                 const newSelected = remainingRoles.pop()!;
-                selected.add(newSelected);
                 if (newSelected.requiredRoles) {
                   for (const r of newSelected.requiredRoles) {
                     selected.add([...roles.values()].find(r2 => r2.name === r)!);
                   }
                 }
+                selected.add(newSelected);
               }
 
               const selectedArr = Array.from(selected);
@@ -129,7 +129,7 @@ export default React.memo(function RolesSelector() {
                   </Card>
                 );
               })}
-              {Array.from({ length: 3 }).map((_, i) => (
+              {Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} />
               ))}
             </div>

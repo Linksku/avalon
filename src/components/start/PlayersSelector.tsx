@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import TextField from '@mui/material/TextField';
 
 import { useStore } from '../../stores/Store';
@@ -8,14 +8,15 @@ import styles from './PlayersSelector.module.scss';
 export default React.memo(function PlayersSelector() {
   const { players, setPlayers } = useStore();
 
-  const nextId = useMemo(() => Math.max(...[...players.values()].map(p => p.id)) + 1, [players]);
-  const playerIds = [...[...players.values()].map(p => p.id), nextId];
+  const playerIds = [...players.values()].map(p => p.id);
+  const nextId = Math.max(0, ...playerIds) + 1;
+  console.log(playerIds, nextId);
   return (
     <div className={styles.container}>
       <h2>Players</h2>
 
       <p>Enter players in the seating order.</p>
-      {playerIds.map((id, idx) => {
+      {[...playerIds, nextId].map((id, idx) => {
         const player = players.get(id);
         return (
           <TextField
@@ -44,10 +45,23 @@ export default React.memo(function PlayersSelector() {
             }}
             onKeyDown={event => {
               const elem = event.target as HTMLInputElement;
+              const name = elem.value.trim();
               if (event.code === 'Enter') {
-                const inputs = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
-                const idx = [...inputs].indexOf(elem);
-                inputs[idx + 1]?.focus();
+                if (idx === playerIds.length - 1) {
+                  const newPlayers = new Map(players);
+                  newPlayers.set(id, { id, name });
+                  setPlayers(newPlayers);
+
+                  setTimeout(() => {
+                    const inputs = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
+                    const idx = [...inputs].indexOf(elem);
+                    inputs[idx + 1]?.focus();
+                  }, 0);
+                } else {
+                  const inputs = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
+                  const idx = [...inputs].indexOf(elem);
+                  inputs[idx + 1]?.focus();
+                }
               }
             }}
             fullWidth

@@ -94,7 +94,7 @@ const PlayerSlideUp = React.memo(function PlayerSlideUp({ player, role, onClose 
               <h3>{player.name}</h3>
               <h4>{drunkAsRole?.name ?? role.name} &middot; {(drunkAsRole?.isEvil ?? role.isEvil) ? 'Evil' : 'Good'}</h4>
               <p>{drunkAsRole?.ability ?? role.ability}</p>
-              <p>{player.info}</p>
+              <p className={styles.playerInfo}>{player.info}</p>
             </>
           )}
           <Button
@@ -155,7 +155,7 @@ export default function NightPage() {
               </CardContent>
             </Card>
           ))}
-          {Array.from({ length: 3 }).map((_, i) => (
+          {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} />
           ))}
         </div>
@@ -191,7 +191,7 @@ export default function NightPage() {
                 [styles.playerFaded]: shownPlayer && shownPlayer.id !== player.id,
               })}
             >
-              <CardContent>
+              <CardContent className={styles.cardContent}>
                 <h3>{player.name}</h3>
                 {seenPlayers.has(player.id)
                   ? <CheckSvg className={styles.checkSvg} />

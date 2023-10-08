@@ -12,17 +12,18 @@
 .roles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
+  gap: 0 1rem;
   margin-bottom: 2rem;
 }
 
 .role {
   text-align: center;
   cursor: pointer;
+  margin-bottom: 1rem;
 }
 
 .cardContent {
-  background-color: #fcfcfc;
+  background-color: #fdfdfd;
   transition: background-color 0.2s;
   min-height: 100%;
   padding-left: 8px;
@@ -69,6 +70,10 @@
 
   &.evil .cardContent {
     background-color: #EF5350;
+  }
+
+  .strength {
+    color: #333;
   }
 
   .name {
