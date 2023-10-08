@@ -17,7 +17,7 @@ type Role = {
   getStrength(roles: Role[]): number,
   ability: string,
   minPlayers?: number,
-  requiredRoles?: string[],
+  requiredRoles?: RoleName[],
   getInfo?: (players: { player: Player, role: Role }[]) => string | null,
 };
 

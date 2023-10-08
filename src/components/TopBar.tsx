@@ -1,3 +1,4 @@
+import IconButton from '@mui/material/IconButton';
 import { ReactComponent as DoorOpenSvg } from 'fontawesome-svgs/svg/door-open-regular.svg';
 
 import { useStore } from '../stores/Store';
@@ -12,9 +13,10 @@ export default function TopBar() {
       <h1>Avalon</h1>
 
       <div className={styles.right}>
-        <button
+        <IconButton
+          size="large"
           onClick={() => {
-            if (window.confirm('Reset the game?')) {
+            if (window.confirm('Quit game?')) {
               localStorage.removeItem('avalonState');
               for (const player of players.values()) {
                 player.roleId = undefined;
@@ -23,8 +25,8 @@ export default function TopBar() {
             }
           }}
         >
-          <DoorOpenSvg />
-        </button>
+          <DoorOpenSvg className={styles.doorSvg} />
+        </IconButton>
       </div>
     </div>
   );

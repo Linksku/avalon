@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import shuffle from 'lodash/shuffle';
 
 import { useStore } from '../../stores/Store';
@@ -21,40 +22,43 @@ function getErrMsg(players: Map<number, Player>, selectedRoles: Set<Role>) {
   if (players.size > 10) {
     return 'Too many players';
   }
-  if (selectedRoles.size < players.size) {
-    return `Missing ${players.size - selectedRoles.size} role${players.size - selectedRoles.size === 1 ? '' : 's'}`;
-  }
 
+  const numGoods = [...selectedRoles].filter(r => !r.isEvil).length;
+  if (numGoods !== players.size - (NUM_EVILS.get(players.size) as number)) {
+    return `Need ${players.size - (NUM_EVILS.get(players.size) as number)} good`;
+  }
   const numEvils = [...selectedRoles].filter(r => r.isEvil).length;
   if (numEvils !== NUM_EVILS.get(players.size)) {
     return `Need ${NUM_EVILS.get(players.size)} evil`;
   }
+  if (selectedRoles.size < players.size) {
+    return `Missing ${players.size - selectedRoles.size} role${players.size - selectedRoles.size === 1 ? '' : 's'}`;
+  }
 
-  const selectedNames = [...selectedRoles].map(r => r.name);
-  if (selectedNames.includes('Merlin') && !selectedNames.includes('Assassin') && selectedNames.includes('Minion')) {
-    return 'Need Assassin';
-  }
-  if (selectedNames.includes('Assassin') && !selectedNames.includes('Merlin')) {
-    return 'Assassin without Merlin';
-  }
-  if (selectedNames.includes('Percival')) {
-    if (!selectedNames.includes('Merlin')) {
-      return 'Percival without Merlin';
-    }
-    if (!selectedNames.includes('Morgana')) {
-      return 'Percival without Morgana';
-    }
-  }
-  if (selectedNames.includes('Morgana')) {
-    if (!selectedNames.includes('Merlin')) {
-      return 'Morgana without Merlin';
-    }
-    if (!selectedNames.includes('Percival')) {
-      return 'Morgana without Percival';
+  const roleNames = [...selectedRoles].map(r => r.name);
+  for (const role of selectedRoles) {
+    if (role.requiredRoles && !role.requiredRoles.every(r => roleNames.includes(r))) {
+      return `${role.name} requires ${role.requiredRoles.join(', ')}`;
     }
   }
 
   return null;
+}
+
+function getStrengthStr(strengthDiff: number) {
+  if (strengthDiff <= -2) {
+    return 'Strongly favors Evil';
+  }
+  if (strengthDiff <= -1) {
+    return 'Favors Evil';
+  }
+  if (strengthDiff < 1) {
+    return 'Balanced game';
+  }
+  if (strengthDiff < 2) {
+    return 'Favors Good';
+  }
+  return 'Strongly favors Good';
 }
 
 function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
@@ -68,7 +72,9 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
 export default function StartGameBtn() {
   const {
     players,
+    setPlayers,
     selectedRoles,
+    setSelectedRoles,
     setGameState,
   } = useStore();
 
@@ -87,35 +93,34 @@ export default function StartGameBtn() {
       />
       <div className={styles.container}>
         <p>
-          {(() => {
-            if (strengthDiff <= -2) {
-              return 'Strongly favors Evil';
-            }
-            if (strengthDiff <= -1) {
-              return 'Favors Evil';
-            }
-            if (strengthDiff < 1) {
-              return 'Balanced game';
-            }
-            if (strengthDiff < 2) {
-              return 'Favors Good';
-            }
-            return 'Strongly favors Good';
-          })()}
-          {errMsg && <>. {errMsg}</>}
+          {errMsg ?? `${getStrengthStr(strengthDiff)} (${strengthDiff})`}
         </p>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          disabled={!!errMsg}
-          onClick={() => {
-            assignRoles(players, selectedRoles);
-            setGameState('night');
-          }}
-        >
-          Start Game
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            disabled={!!errMsg}
+            onClick={() => {
+              assignRoles(players, selectedRoles);
+              setGameState('night');
+            }}
+          >
+            Start Game
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
+            size="large"
+            onClick={() => {
+              setPlayers(new Map());
+              setSelectedRoles(new Set());
+            }}
+          >
+            Reset
+          </Button>
+        </Stack>
       </div>
     </>
   );

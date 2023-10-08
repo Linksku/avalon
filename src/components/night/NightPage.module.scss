@@ -1,3 +1,24 @@
+.players {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.player {
+  text-align: center;
+}
+
+.checkSvg {
+  color: #999;
+  height: 1.6rem;
+  width: 1.6rem;
+}
+
+.holdToReveal {
+  color: #999;
+}
+
 .shownPlayer {
   position: fixed;
   left: 0;
@@ -5,4 +26,6 @@
   bottom: 0;
   max-height: 80%;
   overflow-y: auto;
+  padding: 1rem;
+  border-top: 1px solid #ddd;
 }

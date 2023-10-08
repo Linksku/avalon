@@ -11,11 +11,11 @@
 .role {
   text-align: center;
   cursor: pointer;
+  align-self: flex-start;
 }
 
 .cardContent {
   background-color: #fcfcfc;
-  height: 100%;
 }
 
 .name {
