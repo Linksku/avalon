@@ -2,6 +2,7 @@
   "name": "create-react-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://linksku.github.io/avalon",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -18,6 +19,7 @@
     "clsx": "^2.0.0",
     "constate": "^3.3.2",
     "fontawesome-svgs": "https://github.com/seanyeh/fontawesome-svgs.git",
+    "gh-pages": "^6.0.0",
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
@@ -28,6 +30,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

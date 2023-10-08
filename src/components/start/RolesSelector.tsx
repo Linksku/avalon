@@ -2,7 +2,6 @@ import React from 'react';
 import clsx from 'clsx';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import shuffle from 'lodash/shuffle';
 
@@ -126,6 +125,9 @@ export default React.memo(function RolesSelector() {
                   </Card>
                 );
               })}
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div key={i} />
+              ))}
             </div>
           </React.Fragment>
         );

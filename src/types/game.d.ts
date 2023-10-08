@@ -36,7 +36,8 @@ type RoleName =
   | 'Mason'
   | 'Doppleganger'
   | 'Village Idiot'
-  | 'Lone Wolf';
+  | 'Lone Wolf'
+  | 'Mystic Wolf';
 
 type Role = {
   id: number,

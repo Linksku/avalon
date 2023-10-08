@@ -87,10 +87,16 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
       p.player.info = p.role.getInfo?.(playersArr, p.player) ?? undefined;
     }
   }
-  const doppleganger = playersArr.find(p => p.role.name === 'Doppleganger');
-  if (doppleganger) {
-    doppleganger.player.info = doppleganger.role.getInfo?.(playersArr, doppleganger.player) ?? undefined;
+
+  const secondPass = playersArr.filter(
+    p => (['Doppleganger', 'Mystic Wolf'] as RoleName[]).includes(p.role.name),
+  );
+  if (secondPass.length) {
+    for (const p of secondPass) {
+      p.player.info = p.role.getInfo?.(playersArr, p.player) ?? undefined;
+    }
   }
+
   for (const p of playersArr) {
     p.player.info ??= randInfo(playersArr, p.player);
   }

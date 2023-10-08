@@ -384,6 +384,19 @@ const roles = [
       );
     },
   },
+  {
+    group: 'werewolf',
+    name: 'Mystic Wolf',
+    isEvil: true,
+    getStrength: () => 2.5,
+    ability: 'Knows a random Good\'s info',
+    getInfo(players, curPlayer) {
+      const shuffled = shuffle(players.filter(
+        p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
+      ));
+      return shuffled[0]?.player.info ?? null;
+    },
+  },
 ] satisfies (Omit<Role, 'id'> & { maxCount?: number })[];
 
 let nextId = 1;
