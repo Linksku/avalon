@@ -13,7 +13,7 @@ export default function PlayersSelector() {
     <div className={styles.container}>
       <h2>Players</h2>
 
-      <p>Enter players in the seating order</p>
+      <p>Enter players in the seating order.</p>
       {playerIds.map((id, idx) => {
         const player = players.get(id);
         return (
@@ -22,21 +22,25 @@ export default function PlayersSelector() {
             label={`P${idx + 1}`}
             value={player?.name}
             onChange={event => {
-              const newPlayers = new Map(players);
               const name = event.target.value.trim();
-              if (name) {
-                newPlayers.set(id, { id, name });
-              } else {
-                newPlayers.delete(id);
-              }
+              const newPlayers = new Map(players);
+              newPlayers.set(id, { id, name });
               setPlayers(newPlayers);
             }}
+            onBlur={event => {
+              const name = event.target.value.trim();
+              if (!name) {
+                const newPlayers = new Map(players);
+                newPlayers.delete(id);
+                setPlayers(newPlayers);
+              }
+            }}
             onKeyDown={event => {
+              const elem = event.target as HTMLInputElement;
               if (event.code === 'Enter') {
-                const elem = event.target as HTMLInputElement;
-                if (elem.nextSibling?.nodeName === 'INPUT') {
-                  (elem.nextSibling as HTMLInputElement).focus();
-                }
+                const inputs = document.querySelectorAll('input');
+                const idx = [...inputs].indexOf(elem);
+                inputs[idx + 1]?.focus();
               }
             }}
             fullWidth

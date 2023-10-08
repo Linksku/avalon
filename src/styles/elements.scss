@@ -8,35 +8,15 @@
 
 html {
   // stylelint-disable-next-line declaration-property-unit-allowed-list
-  font-size: 9px;
+  font-size: 16px;
   background-color: #fff;
   color: #333;
   font-family: helvetica, sans-serif;
   user-select: none;
-
-  @include gtXs {
-    // stylelint-disable-next-line declaration-property-unit-allowed-list
-    font-size: 10px;
-  }
-
-  @include gtSm {
-    // stylelint-disable-next-line declaration-property-unit-allowed-list
-    font-size: 11px;
-  }
-
-  @include gtMd {
-    // stylelint-disable-next-line declaration-property-unit-allowed-list
-    font-size: 12px;
-  }
-
-  @include gtLg {
-    // stylelint-disable-next-line declaration-property-unit-allowed-list
-    font-size: 13px;
-  }
 }
 
 body {
-  font-size: 1.6rem;
+  font-size: 1rem;
   line-height: 1.2;
   // Matches iOS show keyboard animation
   transition: padding-top 0.2s ease-out;
@@ -57,13 +37,13 @@ h4 {
 
 // Title.
 h1 {
-  font-size: 2.2rem;
+  font-size: 1.4rem;
   margin-bottom: 1rem;
 }
 
 // Main heading.
 h2 {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
 }
 

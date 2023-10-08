@@ -1,5 +1,13 @@
 type GameState = 'start' | 'night' | 'quests' | 'assassination';
 
+type RoleGroup =
+  | 'base'
+  | 'avalon'
+  | 'botc'
+  | 'werewolf'
+  | 'hitler'
+  | 'custom';
+
 type RoleName =
   | 'Townsfolk'
   | 'Minion'
@@ -12,17 +20,26 @@ type RoleName =
   | 'Untrustworthy Servant'
   | 'Lunatic'
   | 'Revealer'
-  | 'Mason'
-  | 'Lone Wolf'
-  | 'Village Idiot'
+  | 'Washerwoman'
+  | 'Investigator'
   | 'Empath'
+  | 'Dreamer'
+  | 'Seamstress'
   | 'Noble'
   | 'Chef'
+  | 'Drunk'
   | 'Recluse'
-  | 'Spy';
+  | 'Spy'
+  | 'No Dashii'
+  | 'Hitler'
+  | 'Mason'
+  | 'Doppleganger'
+  | 'Village Idiot'
+  | 'Lone Wolf';
 
 type Role = {
   id: number,
+  group: RoleGroup,
   name: RoleName,
   isEvil: boolean,
   getStrength(roles: Role[]): number,
@@ -36,5 +53,7 @@ type Player = {
   id: number,
   name: string,
   roleId?: number,
+  isPoisoned?: boolean,
+  drunkAs?: number,
   info?: string,
 };

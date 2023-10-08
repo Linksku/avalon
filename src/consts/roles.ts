@@ -12,12 +12,34 @@ function formatNamesList(prefix: string, names: string[]) {
   return `${prefix}s are ${names.join(', ')}`;
 }
 
+function getMinionInfo(players: { player: Player, role: Role }[], curPlayer: Player) {
+  return shuffle(players
+    .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
+    .map(p => p.player.name));
+}
+
 function appearsAsEvil(role: Role) {
   return role.name !== 'Mordred' && (role.isEvil || role.name === 'Recluse');
 }
 
+function appearsAsRole(
+  role: Role,
+  players: { player: Player, role: Role }[],
+  curPlayer: Player,
+) {
+  const shuffled = shuffle(players.filter(p => p.player !== curPlayer)).map(p => p.role);
+  if (role.name === 'Recluse') {
+    return shuffled.filter(r => r.name !== 'Recluse' && appearsAsEvil(r))[0].name;
+  }
+  if (role.name === 'Mordred') {
+    return shuffled.filter(r => r.name !== 'Mordred' && !appearsAsEvil(r))[0].name;
+  }
+  return role.name;
+}
+
 const roles = [
   {
+    group: 'base',
     name: 'Townsfolk',
     maxCount: 4,
     isEvil: false,
@@ -25,6 +47,7 @@ const roles = [
     ability: '',
   },
   {
+    group: 'base',
     name: 'Minion',
     maxCount: 3,
     isEvil: true,
@@ -33,18 +56,16 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        players
-          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
-          .map(p => p.player.name),
+        getMinionInfo(players, curPlayer),
       );
     },
   },
   {
+    group: 'avalon',
     name: 'Merlin',
     isEvil: false,
     getStrength: roles => 1 + (roles.filter(r => r.isEvil).length / 2),
     ability: 'Knows Evil',
-    requiredRoles: ['Assassin'],
     getInfo(players) {
       return formatNamesList(
         'Evil',
@@ -55,6 +76,7 @@ const roles = [
     },
   },
   {
+    group: 'avalon',
     name: 'Percival',
     isEvil: false,
     getStrength: () => 3,
@@ -70,6 +92,7 @@ const roles = [
     },
   },
   {
+    group: 'avalon',
     name: 'Assassin',
     isEvil: true,
     getStrength: () => 2,
@@ -78,13 +101,12 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        players
-          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
-          .map(p => p.player.name),
+        getMinionInfo(players, curPlayer),
       );
     },
   },
   {
+    group: 'avalon',
     name: 'Morgana',
     isEvil: true,
     getStrength: () => 2,
@@ -93,13 +115,12 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        players
-          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
-          .map(p => p.player.name),
+        getMinionInfo(players, curPlayer),
       );
     },
   },
   {
+    group: 'avalon',
     name: 'Mordred',
     isEvil: true,
     getStrength: roles => (roles.find(role => role.name === 'Merlin')
@@ -109,19 +130,19 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        players
-          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
-          .map(p => p.player.name),
+        getMinionInfo(players, curPlayer),
       );
     },
   },
   {
+    group: 'avalon',
     name: 'Oberon',
     isEvil: true,
     getStrength: () => 1,
     ability: 'Unknown to Evil, doesn\'t know Evil',
   },
   {
+    group: 'avalon',
     name: 'Untrustworthy Servant',
     isEvil: false,
     getStrength: () => 1,
@@ -132,6 +153,7 @@ const roles = [
     },
   },
   {
+    group: 'avalon',
     name: 'Lunatic',
     isEvil: true,
     getStrength: () => 2,
@@ -139,13 +161,12 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        players
-          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
-          .map(p => p.player.name),
+        getMinionInfo(players, curPlayer),
       );
     },
   },
   {
+    group: 'avalon',
     name: 'Revealer',
     isEvil: true,
     getStrength: () => 1.5,
@@ -153,49 +174,38 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        players
-          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
-          .map(p => p.player.name),
+        getMinionInfo(players, curPlayer),
       );
     },
   },
   {
-    name: 'Mason',
-    maxCount: 3,
+    group: 'botc',
+    name: 'Washerwoman',
     isEvil: false,
     getStrength: () => 1.5,
-    ability: 'Knows other Masons',
-    requiredRoles: ['Mason'],
+    ability: 'Knows 1 of 2 players is a Good role',
     getInfo(players, curPlayer) {
-      return formatNamesList(
-        'Other Mason',
-        players
-          .filter(p => p.player !== curPlayer && p.role.name === 'Mason')
-          .map(p => p.player.name),
-      );
+      const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
+      const good = shuffled.find(p => !appearsAsEvil(p.role))!;
+      const arr = shuffle([good, shuffled[shuffled.length - 1]]);
+      return `${arr[0].player.name} or ${arr[1].player.name} is ${appearsAsRole(good.role, players, curPlayer)}`;
     },
   },
   {
-    name: 'Lone Wolf',
-    isEvil: true,
-    getStrength: () => 1.5,
-    ability: 'Wins alone if on 3rd failed quest',
-    getInfo(players, curPlayer) {
-      return formatNamesList(
-        'Your teammate',
-        players
-          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
-          .map(p => p.player.name),
-      );
-    },
-  },
-  {
-    name: 'Village Idiot',
+    group: 'botc',
+    name: 'Investigator',
     isEvil: false,
-    getStrength: () => 1,
-    ability: 'Can reject once per round',
+    getStrength: () => 2,
+    ability: 'Knows 1 of 2 players is an Evil role',
+    getInfo(players, curPlayer) {
+      const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
+      const evil = shuffled.find(p => appearsAsEvil(p.role))!;
+      const arr = shuffle([evil, shuffled[shuffled.length - 1]]);
+      return `${arr[0].player.name} or ${arr[1].player.name} is ${appearsAsRole(evil.role, players, curPlayer)}`;
+    },
   },
   {
+    group: 'botc',
     name: 'Empath',
     isEvil: false,
     getStrength: () => 2,
@@ -209,23 +219,52 @@ const roles = [
     },
   },
   {
+    group: 'botc',
+    name: 'Dreamer',
+    isEvil: false,
+    getStrength: () => 2,
+    ability: 'Knows a player is a Good role or an Evil role',
+    getInfo(players, curPlayer) {
+      const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
+      const player = shuffled[0];
+      const player2 = appearsAsEvil(player.role)
+        ? shuffled.find(p => !appearsAsEvil(p.role))!
+        : shuffled.find(p => appearsAsEvil(p.role))!;
+      const roles = [player.role, player2.role];
+      return `${player.player.name} is ${appearsAsRole(roles[0], players, curPlayer)} or ${appearsAsRole(roles[1], players, curPlayer)}`;
+    },
+  },
+  {
+    group: 'botc',
+    name: 'Seamstress',
+    isEvil: false,
+    getStrength: () => 2,
+    ability: 'Knows if 2 players are the same team',
+    getInfo(players, curPlayer) {
+      const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
+      return `${shuffled[0].player.name} and ${shuffled[1].player.name} are ${appearsAsEvil(shuffled[0].role) === appearsAsEvil(shuffled[1].role) ? 'the same team' : 'different teams'}`;
+    },
+  },
+  {
+    group: 'botc',
     name: 'Noble',
     isEvil: false,
     getStrength: () => 1.5,
-    ability: 'Knows 3 players, 1 Evil and 2 Good',
+    ability: 'Knows 1 Evil is among 3 players',
     getInfo(players, curPlayer) {
       const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
       const evils = shuffled.filter(p => appearsAsEvil(p.role));
       const goods = shuffled.filter(p => !appearsAsEvil(p.role));
-      return shuffle([evils[0], ...goods.slice(0, 2)]).map(p => p.player.name).join(', ');
+      return `1 Evil among ${shuffle([evils[0], ...goods.slice(0, 2)]).map(p => p.player.name).join(', ')}`;
     },
   },
   {
+    group: 'botc',
     name: 'Chef',
     isEvil: false,
     getStrength: () => 1.5,
     ability: 'Knows number of pairs of adjacent Evils',
-    getInfo(players, curPlayer) {
+    getInfo(players) {
       let count = 0;
       if (appearsAsEvil(players[0].role) && appearsAsEvil(players[players.length - 1].role)) {
         count++;
@@ -239,12 +278,21 @@ const roles = [
     },
   },
   {
+    group: 'botc',
+    name: 'Drunk',
+    isEvil: false,
+    getStrength: (roles) => (roles.filter(r => !r.isEvil).length > 4 ? -1.5 : -1),
+    ability: 'A Good role is poisoned',
+  },
+  {
+    group: 'botc',
     name: 'Recluse',
     isEvil: false,
-    getStrength: () => 0.5,
+    getStrength: (roles) => (roles.filter(r => r.isEvil).length > 2 ? 0 : 0.5),
     ability: 'Appears as Evil to Good',
   },
   {
+    group: 'botc',
     name: 'Spy',
     isEvil: true,
     getStrength: () => 2.5,
@@ -253,7 +301,80 @@ const roles = [
       const shuffled = shuffle(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && !appearsAsEvil(p.role) && p.role.name !== 'Merlin',
       ));
-      return `${shuffled[0].player.name} is ${shuffled[0].role.name}`;
+      return `${shuffled[0].player.name} is ${shuffled[0].role.name}. ${formatNamesList(
+        'Your teammate',
+        getMinionInfo(players, curPlayer),
+      )}`;
+    },
+  },
+  {
+    group: 'botc',
+    name: 'No Dashii',
+    isEvil: true,
+    getStrength: (roles) => (roles.filter(r => !r.isEvil).length > 4 ? 3.5 : 3),
+    ability: 'A Good neighbor is poisoned',
+    getInfo(players, curPlayer) {
+      return formatNamesList(
+        'Your teammate',
+        getMinionInfo(players, curPlayer),
+      );
+    },
+  },
+  {
+    group: 'hitler',
+    name: 'Hitler',
+    isEvil: true,
+    getStrength: () => 1.5,
+    ability: 'Doesn\'t know Evil',
+  },
+  {
+    group: 'werewolf',
+    name: 'Mason',
+    maxCount: 2,
+    isEvil: false,
+    getStrength: () => 1.5,
+    ability: 'Knows other Mason',
+    requiredRoles: ['Mason'],
+    getInfo(players, curPlayer) {
+      return formatNamesList(
+        'Other Mason',
+        players
+          .filter(p => p.player !== curPlayer && p.role.name === 'Mason')
+          .map(p => p.player.name),
+      );
+    },
+  },
+  {
+    group: 'werewolf',
+    name: 'Doppleganger',
+    isEvil: false,
+    getStrength: () => 1.5,
+    ability: 'Knows a random Good\'s information',
+    getInfo(players, curPlayer) {
+      const shuffled = shuffle(players.filter(
+        p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
+      ));
+      return shuffled[0]?.player.info ?? null;
+    },
+  },
+  {
+    group: 'werewolf',
+    name: 'Village Idiot',
+    isEvil: false,
+    getStrength: () => 1,
+    ability: 'Can reject once per round',
+  },
+  {
+    group: 'werewolf',
+    name: 'Lone Wolf',
+    isEvil: true,
+    getStrength: () => 1.5,
+    ability: 'Wins alone if on 3rd failed quest',
+    getInfo(players, curPlayer) {
+      return formatNamesList(
+        'Your teammate',
+        getMinionInfo(players, curPlayer),
+      );
     },
   },
 ] satisfies (Omit<Role, 'id'> & { maxCount?: number })[];

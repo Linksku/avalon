@@ -28,6 +28,7 @@ function PlayerSlideUp({ player, role, onClose }: {
     };
   }, [player?.id]);
 
+  const drunkAsRole = player?.drunkAs ? roles.get(player.drunkAs) : null;
   return (
     <div
       className={clsx(styles.playerSlideUp, {
@@ -37,8 +38,8 @@ function PlayerSlideUp({ player, role, onClose }: {
       {player && role && (
         <>
           <h3>{player.name}</h3>
-          <h4>{role.name}  &middot; {role.isEvil ? 'Evil' : 'Good'}</h4>
-          <p>{role.ability}</p>
+          <h4>{drunkAsRole?.name ?? role.name} &middot; {(drunkAsRole?.isEvil ?? role.isEvil) ? 'Evil' : 'Good'}</h4>
+          <p>{drunkAsRole?.ability ?? role.ability}</p>
           <p>{player.info}</p>
         </>
       )}
@@ -55,12 +56,19 @@ function PlayerSlideUp({ player, role, onClose }: {
 }
 
 export default function NightPage() {
-  const { players } = useStore();
+  const { players, selectedRoles } = useStore();
   const [shownPlayer, setShownPlayer] = useState<Player | null>(null);
   const shownRole = shownPlayer?.roleId ? roles.get(shownPlayer.roleId) : null;
   const [seenPlayers, setSeenPlayers] = useState(new Set<number>());
   const longPressTimer = useRef<number | null>(null);
-  const shuffledPlayers = useRef(shuffle([...players.values()]));
+  const shuffledRoles = useRef(shuffle([...selectedRoles]));
+
+  useEffect(() => {
+    for (const player of players.values()) {
+      const role = roles.get(player.roleId!);
+      console.log(`${player.name} (${role?.name}):`, player.info, player, role);
+    }
+  }, []);
 
   return (
     <>
@@ -68,27 +76,24 @@ export default function NightPage() {
 
       <h2 className={styles.title}>Roles in Game</h2>
       <div className={styles.roles}>
-        {shuffledPlayers.current.map(player => {
-          const role = roles.get(player.roleId as number) as Role;
-          return (
-            <Card
-              key={role.id}
-              elevation={2}
-              className={styles.role}
-            >
-              <CardContent>
-                <h3
-                  className={clsx(styles.roleName, {
-                    [styles.roleNameEvil]: role.isEvil,
-                  })}
-                >
-                  {role.name}
-                </h3>
-                {role.ability && <div>{role.ability}</div>}
-              </CardContent>
-            </Card>
-          );
-        })}
+        {shuffledRoles.current.map(role => (
+          <Card
+            key={role.id}
+            elevation={2}
+            className={styles.role}
+          >
+            <CardContent>
+              <h3
+                className={clsx(styles.roleName, {
+                  [styles.roleNameEvil]: role.isEvil,
+                })}
+              >
+                {role.name}
+              </h3>
+              {role.ability && <div>{role.ability}</div>}
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <h2 className={styles.title}>Player Roles</h2>

@@ -25,7 +25,8 @@ export const [
             return role;
           })),
         };
-        if (temp.players.size !== temp.selectedRoles.size
+        if ((temp.players.size !== temp.selectedRoles.size
+            && temp.players.size !== temp.selectedRoles.size - 1)
           || [...temp.selectedRoles].some(role => !role)
           || temp.players.size < 5) {
           return null;

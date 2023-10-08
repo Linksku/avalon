@@ -30,7 +30,10 @@ function getErrMsg(players: Map<number, Player>, selectedRoles: Set<Role>) {
   if (!selectedRoles.size) {
     return 'Select roles';
   }
-  const numGoods = [...selectedRoles].filter(r => !r.isEvil).length;
+  const roleNames = [...selectedRoles].map(r => r.name);
+
+  const numGoods = [...selectedRoles].filter(r => !r.isEvil).length
+    - (roleNames.includes('Drunk') ? 1 : 0);
   if (numGoods !== players.size - (NUM_EVILS.get(players.size) as number)) {
     return `Need ${players.size - (NUM_EVILS.get(players.size) as number)} good`;
   }
@@ -38,17 +41,16 @@ function getErrMsg(players: Map<number, Player>, selectedRoles: Set<Role>) {
   if (numEvils !== NUM_EVILS.get(players.size)) {
     return `Need ${NUM_EVILS.get(players.size)} evil`;
   }
-  if (selectedRoles.size < players.size) {
+  if (selectedRoles.size - (roleNames.includes('Drunk') ? 1 : 0) < players.size) {
     return `Missing ${players.size - selectedRoles.size} role${players.size - selectedRoles.size === 1 ? '' : 's'}`;
   }
 
-  const roleNames = [...selectedRoles].map(r => r.name);
   for (const role of selectedRoles) {
-    if (role.name === 'Merlin' && !roleNames.includes('Assassin') && !roleNames.includes('Minion')) {
-      continue;
-    }
     if (role.requiredRoles && !role.requiredRoles.every(r => roleNames.includes(r))) {
       return `${role.name} requires ${role.requiredRoles.join(', ')}`;
+    }
+    if (role.name === 'Merlin' && !roleNames.includes('Assassin') && roleNames.includes('Minion')) {
+      return 'Merlin requires Assassin';
     }
   }
 
@@ -77,7 +79,8 @@ function randInfo(players: { player: Player, role: Role }[], curPlayer: Player) 
 }
 
 function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
-  const shuffledRoles = shuffle([...selectedRoles]);
+  const shuffledRoles = shuffle([...selectedRoles])
+    .filter(r => r.name !== 'Drunk');
   for (const player of players.values()) {
     player.roleId = shuffledRoles.pop()?.id;
   }
@@ -86,9 +89,52 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
     player: p,
     role: roles.get(p.roleId as number) as Role,
   }));
+  const roleNames = [...selectedRoles].map(r => r.name);
+  if (roleNames.includes('Drunk')) {
+    const goods = playersArr.filter(p => !p.role.isEvil);
+    const drunk = shuffle(goods)[0];
+    drunk.player.drunkAs = drunk.role.id;
+    drunk.player.roleId = [...selectedRoles].find(r => r.name === 'Drunk')!.id;
+    drunk.player.isPoisoned = true;
+  }
+  if (roleNames.includes('No Dashii')) {
+    const idx = playersArr.findIndex(p => p.role.name === 'No Dashii');
+    const left = playersArr[idx === 0 ? playersArr.length - 1 : idx - 1];
+    const right = playersArr[idx === playersArr.length - 1 ? 0 : idx + 1];
+    if (!left.role.isEvil && !right.role.isEvil) {
+      if (Math.random() < 0.5) {
+        left.player.isPoisoned = true;
+      } else {
+        right.player.isPoisoned = true;
+      }
+    } else if (!left.role.isEvil) {
+      left.player.isPoisoned = true;
+    } else if (!right.role.isEvil) {
+      right.player.isPoisoned = true;
+    }
+  }
+
   for (const p of playersArr) {
-    p.player.info = p.role.getInfo?.(playersArr, p.player)
-      ?? randInfo(playersArr, p.player);
+    if (p.player.isPoisoned) {
+      const role = p.player.drunkAs
+        ? roles.get(p.player.drunkAs)!
+        : p.role;
+      const shuffledRoles = shuffle(playersArr.map(p => p.role));
+      const randPlayers = playersArr.map(p => ({
+        player: p.player,
+        role: shuffledRoles.pop()!,
+      }));
+      p.player.info = role.getInfo?.(randPlayers, p.player) ?? undefined;
+    } else {
+      p.player.info = p.role.getInfo?.(playersArr, p.player) ?? undefined;
+    }
+  }
+  const doppleganger = playersArr.find(p => p.role.name === 'Doppleganger');
+  if (doppleganger) {
+    doppleganger.player.info = doppleganger.role.getInfo?.(playersArr, doppleganger.player) ?? undefined;
+  }
+  for (const p of playersArr) {
+    p.player.info ??= randInfo(playersArr, p.player);
   }
 }
 

@@ -19,7 +19,9 @@ export default function TopBar() {
             if (window.confirm('Quit game?')) {
               localStorage.removeItem('avalonState');
               for (const player of players.values()) {
-                player.roleId = undefined;
+                delete player.roleId;
+                delete player.isPoisoned;
+                delete player.drunkAs;
               }
               setGameState('start');
             }
