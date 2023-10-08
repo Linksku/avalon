@@ -1,3 +1,4 @@
+import React from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import shuffle from 'lodash/shuffle';
@@ -75,7 +76,13 @@ function getStrengthStr(strengthDiff: number) {
 
 function randInfo(players: { player: Player, role: Role }[], curPlayer: Player) {
   const otherPlayerNames = shuffle(players.map(p => p.player.name).filter(n => n !== curPlayer.name));
-  return `Subtly glance at ${otherPlayerNames[0]} and ${otherPlayerNames[1]}`;
+  const question = shuffle([
+    `How many spaces are between ${otherPlayerNames[0]} and ${otherPlayerNames[1]}?`,
+    `How far is ${otherPlayerNames[0]} from you?`,
+    `What color clothes is ${otherPlayerNames[0]} wearing?`,
+    `Do you trust ${otherPlayerNames[0]} or ${otherPlayerNames[1]} more?`,
+  ])[0];
+  return `Pretend you got information. ${question}`;
 }
 
 function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
@@ -138,7 +145,7 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
   }
 }
 
-export default function StartGameBtn() {
+export default React.memo(function StartGameBtn() {
   const {
     players,
     setPlayers,
@@ -193,4 +200,4 @@ export default function StartGameBtn() {
       </div>
     </>
   );
-}
+});

@@ -17,9 +17,38 @@ const ROLE_GROUPS = {
   custom: 'Custom',
 };
 
-export default function RolesSelector() {
+export default React.memo(function RolesSelector() {
   const { selectedRoles, setSelectedRoles } = useStore();
   const selectedRolesArr = Array.from(selectedRoles);
+
+  function handleClickRole(role: Role, selected: boolean) {
+    return () => {
+      const newSelected = new Set(selectedRoles);
+      if (selected) {
+        newSelected.delete(role);
+
+        for (const r of selectedRoles) {
+          if (r.requiredRoles && r.requiredRoles.includes(role.name)) {
+            newSelected.delete(r);
+          }
+        }
+      } else {
+        newSelected.add(role);
+
+        if (role.requiredRoles) {
+          const roleNames = [...selectedRoles].map(r => r.name);
+          for (const r of role.requiredRoles) {
+            if (!roleNames.includes(r)) {
+              newSelected.add(
+                [...roles.values()].find(r2 => r2.name === r) as Role,
+              );
+            }
+          }
+        }
+      }
+      setSelectedRoles(newSelected);
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -38,26 +67,8 @@ export default function RolesSelector() {
                 return (
                   <Card
                     key={role.id}
-                    elevation={2}
-                    onClick={() => {
-                      const newSelected = new Set(selectedRoles);
-                      if (selected) {
-                        newSelected.delete(role);
-                      } else {
-                        newSelected.add(role);
-                        if (role.requiredRoles) {
-                          const roleNames = [...selectedRoles].map(r => r.name);
-                          for (const r of role.requiredRoles) {
-                            if (!roleNames.includes(r)) {
-                              newSelected.add(
-                                [...roles.values()].find(r2 => r2.name === r) as Role,
-                              );
-                            }
-                          }
-                        }
-                      }
-                      setSelectedRoles(newSelected);
-                    }}
+                    elevation={selected ? 1 : 2}
+                    onClick={handleClickRole(role, selected)}
                     className={clsx(styles.role, {
                       [styles.evil]: role.isEvil,
                       [styles.selected]: selected,
@@ -79,4 +90,4 @@ export default function RolesSelector() {
       })}
     </div>
   );
-}
+});

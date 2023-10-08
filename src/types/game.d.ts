@@ -9,7 +9,7 @@ type RoleGroup =
   | 'custom';
 
 type RoleName =
-  | 'Townsfolk'
+  | 'Villager'
   | 'Minion'
   | 'Merlin'
   | 'Percival'
@@ -31,6 +31,7 @@ type RoleName =
   | 'Recluse'
   | 'Spy'
   | 'No Dashii'
+  | 'Liberal'
   | 'Hitler'
   | 'Mason'
   | 'Doppleganger'

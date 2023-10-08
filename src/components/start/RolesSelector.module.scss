@@ -6,7 +6,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .role {
@@ -16,11 +16,17 @@
 
 .cardContent {
   background-color: #fcfcfc;
+  transition: background-color 0.2s;
   min-height: 100%;
 }
 
 .name {
   color: #1976D2;
+  transition: color 0.2s;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   span {
     font-weight: 400;

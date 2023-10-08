@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
@@ -12,7 +13,7 @@ import TopBar from '../TopBar';
 import styles from './NightPage.module.scss';
 import clsx from 'clsx';
 
-function PlayerSlideUp({ player, role, onClose }: {
+const PlayerSlideUp = React.memo(function PlayerSlideUp({ player, role, onClose }: {
   player?: Player | null,
   role?: Role | null,
   onClose: () => void,
@@ -53,12 +54,15 @@ function PlayerSlideUp({ player, role, onClose }: {
       </Button>
     </div>
   );
-}
+});
 
 export default function NightPage() {
   const { players, selectedRoles } = useStore();
   const [shownPlayer, setShownPlayer] = useState<Player | null>(null);
-  const shownRole = shownPlayer?.roleId ? roles.get(shownPlayer.roleId) : null;
+  const shownRole = useMemo(
+    () => (shownPlayer?.roleId ? roles.get(shownPlayer.roleId) : null),
+    [shownPlayer],
+  );
   const [seenPlayers, setSeenPlayers] = useState(new Set<number>());
   const longPressTimer = useRef<number | null>(null);
   const shuffledRoles = useRef(shuffle([...selectedRoles]));
@@ -68,6 +72,7 @@ export default function NightPage() {
       const role = roles.get(player.roleId!);
       console.log(`${player.name} (${role?.name}):`, player.info, player, role);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -140,9 +145,9 @@ export default function NightPage() {
       <PlayerSlideUp
         player={shownPlayer}
         role={shownRole}
-        onClose={() => {
+        onClose={useCallback(() => {
           setShownPlayer(null);
-        }}
+        }, [])}
       />
     </>
   );

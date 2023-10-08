@@ -40,8 +40,8 @@ function appearsAsRole(
 const roles = [
   {
     group: 'base',
-    name: 'Townsfolk',
-    maxCount: 4,
+    name: 'Villager',
+    maxCount: 6,
     isEvil: false,
     getStrength: () => 1,
     ability: '',
@@ -49,7 +49,7 @@ const roles = [
   {
     group: 'base',
     name: 'Minion',
-    maxCount: 3,
+    maxCount: 4,
     isEvil: true,
     getStrength: () => 2,
     ability: 'Knows Evil',
@@ -319,6 +319,13 @@ const roles = [
         getMinionInfo(players, curPlayer),
       );
     },
+  },
+  {
+    group: 'hitler',
+    name: 'Liberal',
+    isEvil: false,
+    getStrength: () => 1,
+    ability: 'Can play Fails',
   },
   {
     group: 'hitler',

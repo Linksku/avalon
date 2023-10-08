@@ -1,10 +1,11 @@
+import React from 'react';
 import TextField from '@mui/material/TextField';
 
 import { useStore } from '../../stores/Store';
 
 import styles from './PlayersSelector.module.scss';
 
-export default function PlayersSelector() {
+export default React.memo(function PlayersSelector() {
   const { players, setPlayers } = useStore();
 
   const nextId = Math.round(performance.now());
@@ -20,18 +21,24 @@ export default function PlayersSelector() {
           <TextField
             key={id}
             label={`P${idx + 1}`}
-            value={player?.name}
+            defaultValue={player?.name}
             onChange={event => {
               const name = event.target.value.trim();
-              const newPlayers = new Map(players);
-              newPlayers.set(id, { id, name });
-              setPlayers(newPlayers);
+              if (name && !players.has(id)) {
+                const newPlayers = new Map(players);
+                newPlayers.set(id, { id, name });
+                setPlayers(newPlayers);
+              }
             }}
             onBlur={event => {
               const name = event.target.value.trim();
-              if (!name) {
+              if (!name && players.has(id)) {
                 const newPlayers = new Map(players);
                 newPlayers.delete(id);
+                setPlayers(newPlayers);
+              } else if (name) {
+                const newPlayers = new Map(players);
+                newPlayers.set(id, { id, name });
                 setPlayers(newPlayers);
               }
             }}
@@ -50,4 +57,4 @@ export default function PlayersSelector() {
       })}
     </div>
   );
-}
+});
