@@ -1,11 +1,41 @@
+.container {
+  padding: 1rem;
+}
+
+.roles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
 .role {
-  .name {
-    font-weight: 400;
-  }
+  text-align: center;
+  cursor: pointer;
+}
+
+.cardContent {
+  background-color: #fcfcfc;
+  height: 100%;
+}
+
+.name {
+  color: #1976D2;
+}
+
+.evil .name {
+  color: #D32F2F;
 }
 
 .role.selected {
+  .cardContent {
+    background-color: #42A5F5;
+  }
+
+  &.evil .cardContent {
+    background-color: #EF5350;
+  }
+
   .name {
-    font-weight: 500;
+    color: #000;
   }
 }

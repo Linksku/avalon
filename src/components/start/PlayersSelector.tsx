@@ -1,3 +1,5 @@
+import TextField from '@mui/material/TextField';
+
 import { useStore } from '../../stores/Store';
 
 import styles from './PlayersSelector.module.scss';
@@ -8,14 +10,15 @@ export default function PlayersSelector() {
   const nextId = Math.round(performance.now());
   const playerIds = [...[...players.values()].map(p => p.id), nextId];
   return (
-    <div>
+    <div className={styles.container}>
       <h2>Players</h2>
 
-      {playerIds.map(id => {
+      {playerIds.map((id, idx) => {
         const player = players.get(id);
         return (
-          <input
+          <TextField
             key={id}
+            label={`P${idx + 1}`}
             value={player?.name}
             onChange={event => {
               const newPlayers = new Map(players);
@@ -35,7 +38,8 @@ export default function PlayersSelector() {
                 }
               }
             }}
-            className={styles.input}
+            fullWidth
+            margin="normal"
           />
         );
       })}

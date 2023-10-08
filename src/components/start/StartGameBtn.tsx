@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import Button from '@mui/material/Button';
 import shuffle from 'lodash/shuffle';
 
 import { useStore } from '../../stores/Store';
@@ -72,17 +72,42 @@ export default function StartGameBtn() {
     setGameState,
   } = useStore();
 
+  const selectedRolesArr = Array.from(selectedRoles);
+  const strengthDiff = selectedRolesArr.reduce(
+    (sum, role) => (role.isEvil
+      ? sum - role.getStrength(selectedRolesArr)
+      : sum + role.getStrength(selectedRolesArr)),
+    0,
+  );
   const errMsg = getErrMsg(players, selectedRoles);
   return (
     <>
       <div
-        className={clsx(styles.padding, {
-          [styles.withErr]: !!errMsg,
-        })}
+        className={styles.padding}
       />
       <div className={styles.container}>
-        {errMsg && <p>{errMsg}</p>}
-        <button
+        <p>
+          {(() => {
+            if (strengthDiff <= -2) {
+              return 'Strongly favors Evil';
+            }
+            if (strengthDiff <= -1) {
+              return 'Favors Evil';
+            }
+            if (strengthDiff < 1) {
+              return 'Balanced game';
+            }
+            if (strengthDiff < 2) {
+              return 'Favors Good';
+            }
+            return 'Strongly favors Good';
+          })()}
+          {errMsg && <>. {errMsg}</>}
+        </p>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
           disabled={!!errMsg}
           onClick={() => {
             assignRoles(players, selectedRoles);
@@ -90,7 +115,7 @@ export default function StartGameBtn() {
           }}
         >
           Start Game
-        </button>
+        </Button>
       </div>
     </>
   );

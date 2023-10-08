@@ -5,7 +5,7 @@ import { useStore } from '../stores/Store';
 import styles from './TopBar.module.scss';
 
 export default function TopBar() {
-  const { setGameState } = useStore();
+  const { setGameState, players } = useStore();
 
   return (
     <div className={styles.container}>
@@ -16,6 +16,9 @@ export default function TopBar() {
           onClick={() => {
             if (window.confirm('Reset the game?')) {
               localStorage.removeItem('avalonState');
+              for (const player of players.values()) {
+                player.roleId = undefined;
+              }
               setGameState('start');
             }
           }}

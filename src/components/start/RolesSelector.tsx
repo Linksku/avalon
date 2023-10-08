@@ -1,4 +1,6 @@
 import clsx from 'clsx';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 import roles from '../../consts/roles';
 import { useStore } from '../../stores/Store';
@@ -10,32 +12,39 @@ export default function RolesSelector() {
   const selectedRolesArr = Array.from(selectedRoles);
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2>Roles</h2>
-      {[...roles.values()].map(role => {
-        const selected = selectedRoles.has(role);
-        return (
-          <div
-            key={role.id}
-            className={clsx(styles.role, {
-              [styles.selected]: selected,
-            })}
-            onClick={() => {
-              const newSelected = new Set(selectedRoles);
-              if (selected) {
-                newSelected.delete(role);
-              } else {
-                newSelected.add(role);
-              }
-              setSelectedRoles(newSelected);
-            }}
-          >
-            <h3 className={styles.name}>{role.name}</h3>
-            <p>{role.isEvil ? 'Evil' : 'Good'} &middot; {role.getStrength(selectedRolesArr)}</p>
-            {role.ability && <p>{role.ability}</p>}
-          </div>
-        );
-      })}
+      <div className={styles.roles}>
+        {[...roles.values()].map(role => {
+          const selected = selectedRoles.has(role);
+          return (
+            <Card
+              key={role.id}
+              elevation={2}
+              onClick={() => {
+                const newSelected = new Set(selectedRoles);
+                if (selected) {
+                  newSelected.delete(role);
+                } else {
+                  newSelected.add(role);
+                }
+                setSelectedRoles(newSelected);
+              }}
+              className={clsx(styles.role, {
+                [styles.evil]: role.isEvil,
+                [styles.selected]: selected,
+              })}
+            >
+              <CardContent className={styles.cardContent}>
+                <h3 className={styles.name}>
+                  {role.name} &middot; {role.getStrength(selectedRolesArr)}
+                </h3>
+                {role.ability && <div>{role.ability}</div>}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -1,8 +1,4 @@
 .padding {
-  height: 5rem;
-}
-
-.withErr {
   height: 10rem;
 }
 
@@ -12,5 +8,6 @@
   right: 0;
   bottom: 0;
   background-color: #fff;
-  padding: 1rem;
+  border-top: 0.5px solid #ddd;
+  padding: 1rem 1rem 1.5rem 1rem;
 }
