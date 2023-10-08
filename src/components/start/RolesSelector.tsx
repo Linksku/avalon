@@ -66,6 +66,7 @@ export default React.memo(function RolesSelector() {
               const remainingRoles = shuffle([...roles.values()]);
               while (selected.size - (selected.has(drunk) ? 1 : 0) < players.size) {
                 const newSelected = remainingRoles.pop()!;
+                let cantAdd = false;
                 if (newSelected.requiredRoles) {
                   for (const r of newSelected.requiredRoles) {
                     const idx = remainingRoles.findIndex(
@@ -74,10 +75,14 @@ export default React.memo(function RolesSelector() {
                     if (idx >= 0) {
                       selected.add(remainingRoles[idx]);
                       remainingRoles.splice(idx, 1);
+                    } else {
+                      cantAdd = true;
                     }
                   }
                 }
-                selected.add(newSelected);
+                if (!cantAdd) {
+                  selected.add(newSelected);
+                }
               }
 
               const selectedArr = Array.from(selected);
@@ -87,7 +92,6 @@ export default React.memo(function RolesSelector() {
                   : sum + role.getStrength(selectedArr)),
                 0,
               );
-              console.log(strengthDiff, selectedArr.map(r => r.name));
               if (Math.abs(strengthDiff) < 1 && !getRolesErr(players, selected)) {
                 setSelectedRoles(selected);
                 break;

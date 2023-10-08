@@ -22,10 +22,10 @@ export default React.memo(function PlayersSelector() {
             key={id}
             label={`P${idx + 1}`}
             defaultValue={player?.name ?? ''}
-            onFocus={() => {
+            onFocus={event => {
               if (!players.has(id)) {
                 const newPlayers = new Map(players);
-                newPlayers.set(id, { id, name: '' });
+                newPlayers.set(id, { id, name: event.target.value.trim() });
                 setPlayers(newPlayers);
               }
             }}
