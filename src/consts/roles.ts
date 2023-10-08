@@ -24,11 +24,11 @@ const roles = [
     isEvil: true,
     getStrength: () => 2,
     ability: 'Knows Evil',
-    getInfo(players) {
+    getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
         players
-          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
           .map(p => p.player.name),
       );
     },
@@ -43,7 +43,7 @@ const roles = [
       return formatNamesList(
         'Evil',
         players
-          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .filter(p => p.role.isEvil && p.role.name !== 'Mordred')
           .map(p => p.player.name),
       );
     },
@@ -69,11 +69,11 @@ const roles = [
     getStrength: () => 2,
     ability: 'Assassinates Merlin',
     requiredRoles: ['Merlin'],
-    getInfo(players) {
+    getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
         players
-          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
           .map(p => p.player.name),
       );
     },
@@ -84,11 +84,11 @@ const roles = [
     getStrength: () => 2,
     ability: 'Appears as Merlin',
     requiredRoles: ['Merlin', 'Percival'],
-    getInfo(players) {
+    getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
         players
-          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
           .map(p => p.player.name),
       );
     },
@@ -99,11 +99,11 @@ const roles = [
     getStrength: roles => 2 + (roles.filter(r => !r.isEvil).length / 2),
     ability: 'Unknown to Merlin',
     requiredRoles: ['Merlin'],
-    getInfo(players) {
+    getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
         players
-          .filter(p => p.role.isEvil && p.role.name !== 'Oberon')
+          .filter(p => p.player !== curPlayer && p.role.isEvil && p.role.name !== 'Oberon')
           .map(p => p.player.name),
       );
     },

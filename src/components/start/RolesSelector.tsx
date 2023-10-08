@@ -37,7 +37,8 @@ export default function RolesSelector() {
             >
               <CardContent className={styles.cardContent}>
                 <h3 className={styles.name}>
-                  {role.name} &middot; {role.getStrength(selectedRolesArr)}
+                  {role.name}
+                  <span> &middot; {role.getStrength(selectedRolesArr)}</span>
                 </h3>
                 {role.ability && <div>{role.ability}</div>}
               </CardContent>

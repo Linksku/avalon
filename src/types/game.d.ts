@@ -18,7 +18,7 @@ type Role = {
   ability: string,
   minPlayers?: number,
   requiredRoles?: RoleName[],
-  getInfo?: (players: { player: Player, role: Role }[]) => string | null,
+  getInfo?: (players: { player: Player, role: Role }[], curPlayer: Player) => string | null,
 };
 
 type Player = {

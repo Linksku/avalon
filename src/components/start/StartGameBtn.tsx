@@ -17,12 +17,18 @@ const NUM_EVILS = new Map([
 
 function getErrMsg(players: Map<number, Player>, selectedRoles: Set<Role>) {
   if (players.size < 5) {
-    return 'Need 5 players';
+    return 'Enter players';
   }
   if (players.size > 10) {
     return 'Too many players';
   }
+  if (new Set([...players.values()].map(p => p.name)).size !== players.size) {
+    return 'Duplicate names';
+  }
 
+  if (!selectedRoles.size) {
+    return 'Select roles';
+  }
   const numGoods = [...selectedRoles].filter(r => !r.isEvil).length;
   if (numGoods !== players.size - (NUM_EVILS.get(players.size) as number)) {
     return `Need ${players.size - (NUM_EVILS.get(players.size) as number)} good`;
@@ -37,6 +43,9 @@ function getErrMsg(players: Map<number, Player>, selectedRoles: Set<Role>) {
 
   const roleNames = [...selectedRoles].map(r => r.name);
   for (const role of selectedRoles) {
+    if (role.name === 'Merlin' && !roleNames.includes('Assassin') && !roleNames.includes('Minion')) {
+      continue;
+    }
     if (role.requiredRoles && !role.requiredRoles.every(r => roleNames.includes(r))) {
       return `${role.name} requires ${role.requiredRoles.join(', ')}`;
     }
@@ -93,7 +102,7 @@ export default function StartGameBtn() {
       />
       <div className={styles.container}>
         <p>
-          {errMsg ?? `${getStrengthStr(strengthDiff)} (${strengthDiff})`}
+          {errMsg ?? `${getStrengthStr(strengthDiff)} (${strengthDiff < 0 ? '' : '+'}${strengthDiff})`}
         </p>
         <Stack direction="row" spacing={2}>
           <Button

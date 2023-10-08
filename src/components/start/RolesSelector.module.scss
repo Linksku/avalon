@@ -20,6 +20,11 @@
 
 .name {
   color: #1976D2;
+
+  span {
+    font-weight: 400;
+    font-size: 0.9em;
+  }
 }
 
 .evil .name {
@@ -28,7 +33,7 @@
 
 .role.selected {
   .cardContent {
-    background-color: #42A5F5;
+    background-color: #64B5F6;
   }
 
   &.evil .cardContent {
