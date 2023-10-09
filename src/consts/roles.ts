@@ -311,6 +311,9 @@ const roles = [
           p => p.player !== curPlayer && !p.role.isEvil && p.role.getInfo,
         ));
         const fakeDrunk = shuffled[0];
+        if (!fakeDrunk) {
+          return null;
+        }
         const randPlayers1 = getPoisonedRandPlayers(players);
         const randPlayers2 = getPoisonedRandPlayers(players);
         return `Fake info: "${fakeDrunk.role.getInfo!(randPlayers1, fakeDrunk.player)}"\nReal info: "${fakeDrunk.role.getInfo!(randPlayers2, fakeDrunk.player)}"`;

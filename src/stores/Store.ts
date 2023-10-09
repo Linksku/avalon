@@ -56,6 +56,7 @@ export const [
         })),
       }));
       _setGameState(newState);
+      window.scrollTo(0, 0);
     }, [players, selectedRoles]);
 
     return {
