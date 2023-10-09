@@ -361,17 +361,10 @@ const roles = [
   },
   {
     group: 'hitler',
-    name: 'Liberal',
-    isEvil: false,
-    getStrength: () => 1,
-    ability: 'Can play Fails',
-  },
-  {
-    group: 'hitler',
     name: 'Hitler',
     isEvil: true,
-    getStrength: () => 1.5,
-    ability: 'Doesn\'t know Evil',
+    getStrength: roles => (roles.length >= 7 ? 2.5 : 2),
+    ability: 'When on Quest, can reveal role to fail without votes',
   },
   {
     group: 'werewolf',

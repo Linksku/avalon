@@ -108,8 +108,8 @@ export default React.memo(function StartGameBtn() {
     setNumResets,
   } = useStore();
 
-  const selectedRolesArr = Array.from(selectedRoles);
-  const strengthDiff = selectedRolesArr.reduce(
+  const selectedRolesArr = Array.from(selectedRoles).filter(r => r.name !== 'Drunk');
+  const strengthDiff = Array.from(selectedRoles).reduce(
     (sum, role) => (role.isEvil
       ? sum - role.getStrength(selectedRolesArr)
       : sum + role.getStrength(selectedRolesArr)),

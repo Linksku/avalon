@@ -68,8 +68,8 @@ export default React.memo(function RolesSelector() {
         }
       }
 
-      const selectedArr = Array.from(selected);
-      const strengthDiff = selectedArr.reduce(
+      const selectedArr = Array.from(selected).filter(r => r !== drunk);
+      const strengthDiff = Array.from(selected).reduce(
         (sum, role) => (role.isEvil
           ? sum - role.getStrength(selectedArr)
           : sum + role.getStrength(selectedArr)),
