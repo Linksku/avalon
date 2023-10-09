@@ -89,7 +89,7 @@ const roles = [
     isEvil: false,
     getStrength: () => 3,
     ability: 'Knows Merlin',
-    requiredRoles: ['Merlin', 'Morgana', 'Assassin'],
+    requiredRoles: ['Merlin', 'Morgana'],
     getInfo(players) {
       return formatNamesList(
         'Merlin',
@@ -119,7 +119,7 @@ const roles = [
     isEvil: true,
     getStrength: () => 2,
     ability: 'Appears as Merlin',
-    requiredRoles: ['Merlin', 'Percival', 'Assassin'],
+    requiredRoles: ['Merlin', 'Percival'],
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',

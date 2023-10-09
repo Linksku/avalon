@@ -24,6 +24,66 @@ export default React.memo(function RolesSelector() {
   const { players, selectedRoles, setSelectedRoles } = useStore();
   const selectedRolesArr = Array.from(selectedRoles);
 
+  function handleClickRandomize() {
+    const drunk = [...roles.values()].find(role => role.name === 'Drunk')!;
+    let bestSelected: Set<Role> | undefined;
+    let bestStrengthDiff = Number.POSITIVE_INFINITY;
+    for (let i = 0; i < players.size; i++) {
+      const selected = new Set<Role>();
+      let remainingRoles = shuffle([...roles.values()]);
+      while (selected.size - (selected.has(drunk) ? 1 : 0) < players.size) {
+        const newSelected = remainingRoles.pop()!;
+        let cantAdd = false;
+        if (newSelected.requiredRoles) {
+          for (const r of newSelected.requiredRoles) {
+            if ([...selected].some(r2 => r2.name === r)) {
+              continue;
+            }
+
+            const idx = remainingRoles.findIndex(
+              r2 => r2.name === r && r2 !== newSelected,
+            );
+            if (idx >= 0) {
+              selected.add(remainingRoles[idx]);
+              remainingRoles.splice(idx, 1);
+            } else {
+              cantAdd = true;
+              break;
+            }
+          }
+        }
+        if (!cantAdd) {
+          selected.add(newSelected);
+        }
+
+        if ([...selected].filter(r => !r.isEvil).length - (selected.has(drunk) ? 1 : 0)
+          >= players.size - NUM_EVILS.get(players.size)!) {
+          remainingRoles = remainingRoles.filter(r => r.isEvil);
+        }
+        if ([...selected].filter(r => r.isEvil).length >= NUM_EVILS.get(players.size)!) {
+          remainingRoles = remainingRoles.filter(r => !r.isEvil);
+        }
+        if (!remainingRoles.length) {
+          break;
+        }
+      }
+
+      const selectedArr = Array.from(selected);
+      const strengthDiff = selectedArr.reduce(
+        (sum, role) => (role.isEvil
+          ? sum - role.getStrength(selectedArr)
+          : sum + role.getStrength(selectedArr)),
+        0,
+      );
+      if (!bestSelected
+        || (!getRolesErr(players, selected) && Math.abs(strengthDiff) < bestStrengthDiff)) {
+        bestSelected = selected;
+        bestStrengthDiff = Math.abs(strengthDiff);
+      }
+    }
+    setSelectedRoles(bestSelected!);
+  }
+
   function handleClickRole(role: Role, selected: boolean) {
     return () => {
       const newSelected = new Set(selectedRoles);
@@ -59,65 +119,7 @@ export default React.memo(function RolesSelector() {
 
       <div className={styles.randomizeBtn}>
         <Button
-          onClick={() => {
-            const drunk = [...roles.values()].find(role => role.name === 'Drunk')!;
-            let bestSelected: Set<Role> | undefined;
-            let bestStrengthDiff = Number.POSITIVE_INFINITY;
-            for (let i = 0; i < players.size; i++) {
-              const selected = new Set<Role>();
-              let remainingRoles = shuffle([...roles.values()]);
-              while (selected.size - (selected.has(drunk) ? 1 : 0) < players.size) {
-                const newSelected = remainingRoles.pop()!;
-                let cantAdd = false;
-                if (newSelected.requiredRoles) {
-                  for (const r of newSelected.requiredRoles) {
-                    if ([...selected].some(r2 => r2.name === r)) {
-                      continue;
-                    }
-
-                    const idx = remainingRoles.findIndex(
-                      r2 => r2.name === r && r2 !== newSelected,
-                    );
-                    if (idx >= 0) {
-                      selected.add(remainingRoles[idx]);
-                      remainingRoles.splice(idx, 1);
-                    } else {
-                      cantAdd = true;
-                      break;
-                    }
-                  }
-                }
-                if (!cantAdd) {
-                  selected.add(newSelected);
-                }
-
-                if ([...selected].filter(r => !r.isEvil).length - (selected.has(drunk) ? 1 : 0)
-                  >= players.size - NUM_EVILS.get(players.size)!) {
-                  remainingRoles = remainingRoles.filter(r => r.isEvil);
-                }
-                if ([...selected].filter(r => r.isEvil).length >= NUM_EVILS.get(players.size)!) {
-                  remainingRoles = remainingRoles.filter(r => !r.isEvil);
-                }
-                if (!remainingRoles.length) {
-                  break;
-                }
-              }
-
-              const selectedArr = Array.from(selected);
-              const strengthDiff = selectedArr.reduce(
-                (sum, role) => (role.isEvil
-                  ? sum - role.getStrength(selectedArr)
-                  : sum + role.getStrength(selectedArr)),
-                0,
-              );
-              if (!bestSelected
-                || (!getRolesErr(players, selected) && Math.abs(strengthDiff) < bestStrengthDiff)) {
-                bestSelected = selected;
-                bestStrengthDiff = Math.abs(strengthDiff);
-              }
-            }
-            setSelectedRoles(bestSelected!);
-          }}
+          onClick={handleClickRandomize}
           disabled={players.size < 5}
           variant="contained"
           color="primary"
