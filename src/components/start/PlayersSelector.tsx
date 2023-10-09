@@ -24,21 +24,28 @@ export default React.memo(function PlayersSelector() {
             defaultValue={player?.name ?? ''}
             onFocus={event => {
               if (!players.has(id)) {
-                const newPlayers = new Map(players);
-                newPlayers.set(id, { id, name: event.target.value.trim() });
-                setPlayers(newPlayers);
+                const name = event.target.value.trim();
+                setPlayers(players => {
+                  const newPlayers = new Map(players);
+                  newPlayers.set(id, { ...player, id, name });
+                  return newPlayers;
+                });
               }
             }}
             onBlur={event => {
               const name = event.target.value.trim();
               if (!name && players.has(id)) {
-                const newPlayers = new Map(players);
-                newPlayers.delete(id);
-                setPlayers(newPlayers);
+                setPlayers(players => {
+                  const newPlayers = new Map(players);
+                  newPlayers.delete(id);
+                  return newPlayers;
+                });
               } else if (name) {
-                const newPlayers = new Map(players);
-                newPlayers.set(id, { id, name });
-                setPlayers(newPlayers);
+                setPlayers(players => {
+                  const newPlayers = new Map(players);
+                  newPlayers.set(id, { ...player, id, name });
+                  return newPlayers;
+                });
               }
             }}
             onKeyDown={event => {

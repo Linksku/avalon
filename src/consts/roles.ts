@@ -89,7 +89,7 @@ const roles = [
     isEvil: false,
     getStrength: () => 3,
     ability: 'Knows Merlin',
-    requiredRoles: ['Merlin', 'Morgana'],
+    requiredRoles: ['Merlin', 'Morgana', 'Assassin'],
     getInfo(players) {
       return formatNamesList(
         'Merlin',
@@ -119,7 +119,7 @@ const roles = [
     isEvil: true,
     getStrength: () => 2,
     ability: 'Appears as Merlin',
-    requiredRoles: ['Merlin', 'Percival'],
+    requiredRoles: ['Merlin', 'Percival', 'Assassin'],
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
@@ -155,7 +155,7 @@ const roles = [
     isEvil: false,
     getStrength: () => 1,
     ability: 'Appears Evil, knows Assassin, becomes Evil if assassinated',
-    requiredRoles: ['Assassin'],
+    requiredRoles: ['Assassin', 'Merlin'],
     getInfo(players) {
       return `Assassin is ${players.find(p => p.role.name === 'Assassin')?.player.name}`;
     },

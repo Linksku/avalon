@@ -1,4 +1,4 @@
-const NUM_EVILS = new Map([
+export const NUM_EVILS = new Map([
   [5, 2],
   [6, 2],
   [7, 3],
