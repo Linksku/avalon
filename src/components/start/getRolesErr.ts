@@ -26,26 +26,12 @@ export default function getRolesErr(players: Map<number, Player>, selectedRoles:
   }
   const roleNames = [...selectedRoles].map(r => r.name);
 
-  const numGoods = [...selectedRoles].filter(r => !r.isEvil).length
-    - (roleNames.includes('Drunk') ? 1 : 0);
-  const expectedGoods = players.size - (NUM_EVILS.get(players.size) as number);
-  if (numGoods < expectedGoods) {
-    return `Need ${expectedGoods - numGoods} more Good${expectedGoods - numGoods === 1 ? '' : 's'}`;
-  }
-  if (numGoods > expectedGoods) {
-    return `Remove ${numGoods - expectedGoods} Good${numGoods - expectedGoods === 1 ? '' : 's'}`;
-  }
-
+  const numGoods = [...selectedRoles].filter(r => !r.isEvil && r.name !== 'Drunk').length;
   const numEvils = [...selectedRoles].filter(r => r.isEvil).length;
   const expectedEvils = NUM_EVILS.get(players.size) as number;
-  if (numEvils < expectedEvils) {
-    return `Need ${expectedEvils - numEvils} more Evil${expectedEvils - numEvils === 1 ? '' : 's'}`;
-  }
-  if (numEvils > expectedEvils) {
-    return `Remove ${numEvils - expectedEvils} Evil${numEvils - expectedEvils === 1 ? '' : 's'}`;
-  }
-  if (numGoods + numEvils < players.size) {
-    return `Missing ${players.size - selectedRoles.size} role${players.size - selectedRoles.size === 1 ? '' : 's'}`;
+  const expectedGoods = players.size - expectedEvils;
+  if (numGoods !== expectedGoods || numEvils !== expectedEvils) {
+    return `Selected ${numGoods}/${expectedGoods} Good${numGoods === 1 ? '' : 's'} and ${numEvils}/${expectedEvils} Evil${numEvils === 1 ? '' : 's'}.`;
   }
 
   for (const role of selectedRoles) {

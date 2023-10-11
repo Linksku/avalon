@@ -15,10 +15,9 @@ const ROLE_GROUPS = {
   base: 'Base',
   avalon: 'Avalon',
   botc: 'BotC',
-  hitler: 'Secret Hitler',
   werewolf: 'Werewolf',
-  custom: 'Custom',
-};
+  misc: 'Misc',
+} satisfies Record<RoleGroup, string>;
 
 export default React.memo(function RolesSelector() {
   const { players, selectedRoles, setSelectedRoles } = useStore();

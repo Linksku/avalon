@@ -5,8 +5,7 @@ type RoleGroup =
   | 'avalon'
   | 'botc'
   | 'werewolf'
-  | 'hitler'
-  | 'custom';
+  | 'misc';
 
 type RoleName =
   | 'Villager'
@@ -18,27 +17,32 @@ type RoleName =
   | 'Mordred'
   | 'Oberon'
   | 'Untrustworthy Servant'
+  | 'Good Lancelot'
+  | 'Evil Lancelot'
   | 'Lunatic'
   | 'Revealer'
   | 'Washerwoman'
   | 'Investigator'
   | 'Empath'
+  | 'Ravenkeeper'
   | 'Dreamer'
+  | 'Grandmother'
   | 'Seamstress'
   | 'Noble'
   | 'Chef'
   | 'Drunk'
   | 'Puzzlemaster'
   | 'Recluse'
+  | 'Magician'
   | 'Spy'
   | 'No Dashii'
-  | 'Liberal'
-  | 'Hitler'
   | 'Mason'
   | 'Doppleganger'
   | 'Village Idiot'
   | 'Lone Wolf'
-  | 'Mystic Wolf';
+  | 'Mystic Wolf'
+  | 'Liberal'
+  | 'Hitler';
 
 type Role = {
   id: number,
