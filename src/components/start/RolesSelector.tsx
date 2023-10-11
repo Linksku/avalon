@@ -7,9 +7,10 @@ import shuffle from 'lodash/shuffle';
 
 import roles from '../../consts/roles';
 import { useStore } from '../../stores/Store';
+import getRolesErr, { NUM_EVILS } from './getRolesErr';
+import getStrengthDiff from './getStrengthDiff';
 
 import styles from './RolesSelector.module.scss';
-import getRolesErr, { NUM_EVILS } from './getRolesErr';
 
 const ROLE_GROUPS = {
   base: 'Base',
@@ -67,13 +68,7 @@ export default React.memo(function RolesSelector() {
         }
       }
 
-      const selectedArr = Array.from(selected).filter(r => r !== drunk);
-      const strengthDiff = Array.from(selected).reduce(
-        (sum, role) => (role.isEvil
-          ? sum - role.getStrength(selectedArr)
-          : sum + role.getStrength(selectedArr)),
-        0,
-      );
+      const strengthDiff = getStrengthDiff(selected);
       if (!bestSelected
         || (!getRolesErr(players, selected) && Math.abs(strengthDiff) < bestStrengthDiff)) {
         bestSelected = selected;

@@ -14,7 +14,7 @@ export default function getRolesErr(players: Map<number, Player>, selectedRoles:
   if (players.size < 5) {
     return 'Need 5 players';
   }
-  if (players.size > 10) {
+  if ([...players.values()].filter(p => p.name).length > 10) {
     return 'Too many players';
   }
   if (new Set([...players.values()].map(p => p.name)).size !== players.size) {

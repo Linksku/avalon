@@ -12,7 +12,7 @@ function formatNamesList(prefix: string, names: string[]) {
   return `${prefix}s are ${names.join(', ')}`;
 }
 
-function getMinionInfo(players: { player: Player, role: Role }[], curPlayer: Player) {
+function getEvilTeammates(players: { player: Player, role: Role }[], curPlayer: Player) {
   return shuffle(players
     .filter(p => p.player !== curPlayer
       && (p.role.isEvil || (p.role.name === 'Magician' && !p.player.isPoisoned))
@@ -24,7 +24,8 @@ function appearsAsEvilToGood({ player, role }: { role: Role, player: Player }) {
   if (player.isPoisoned) {
     return role.isEvil;
   }
-  return role.name !== 'Mordred' && (role.isEvil || role.name === 'Recluse');
+  return role.name !== 'Mordred'
+    && (role.isEvil || role.name === 'Recluse' || role.name === 'Untrustworthy Servant');
 }
 
 function appearsAsRole(
@@ -36,6 +37,9 @@ function appearsAsRole(
   const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
   if (role.name === 'Recluse') {
     return shuffled.filter(p => p.role.name !== 'Recluse' && appearsAsEvilToGood(p))[0]?.role.name ?? 'Recluse';
+  }
+  if (role.name === 'Untrustworthy Servant') {
+    return shuffled.filter(p => p.role.name !== 'Untrustworthy Servant' && appearsAsEvilToGood(p))[0]?.role.name ?? 'Untrustworthy Servant';
   }
   if (role.name === 'Mordred' && !curPlayerRole.isEvil) {
     return shuffled.filter(p => p.role.name !== 'Mordred' && !appearsAsEvilToGood(p))[0]?.role.name ?? 'Mordred';
@@ -69,11 +73,11 @@ const roles = [
     maxCount: 4,
     isEvil: true,
     getStrength: () => 2,
-    ability: 'Knows Evil',
+    ability: '',
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        getMinionInfo(players, curPlayer),
+        getEvilTeammates(players, curPlayer),
       );
     },
   },
@@ -118,7 +122,7 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        getMinionInfo(players, curPlayer),
+        getEvilTeammates(players, curPlayer),
       );
     },
   },
@@ -127,12 +131,12 @@ const roles = [
     name: 'Morgana',
     isEvil: true,
     getStrength: () => 2,
-    ability: 'Appears as Merlin',
+    ability: 'Appears as Merlin to Percival',
     requiredRoles: ['Merlin', 'Percival'],
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        getMinionInfo(players, curPlayer),
+        getEvilTeammates(players, curPlayer),
       );
     },
   },
@@ -143,11 +147,11 @@ const roles = [
     getStrength: roles => (roles.find(role => role.name === 'Merlin')
       ? 2 + (roles.filter(r => !r.isEvil).length / 2)
       : 3),
-    ability: 'Appears as Good',
+    ability: 'Appears as Good to Goods',
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        getMinionInfo(players, curPlayer),
+        getEvilTeammates(players, curPlayer),
       );
     },
   },
@@ -163,7 +167,7 @@ const roles = [
     name: 'Untrustworthy Servant',
     isEvil: false,
     getStrength: () => 1,
-    ability: 'Appears Evil, knows Assassin, becomes Evil if assassinated',
+    ability: 'Appears as Evil, knows Assassin, becomes Evil if assassinated',
     requiredRoles: ['Assassin', 'Merlin'],
     getInfo(players) {
       return `Assassin is ${players.find(p => p.role.name === 'Assassin')?.player.name}`;
@@ -194,7 +198,7 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        getMinionInfo(players, curPlayer),
+        getEvilTeammates(players, curPlayer),
       );
     },
   },
@@ -207,7 +211,7 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        getMinionInfo(players, curPlayer),
+        getEvilTeammates(players, curPlayer),
       );
     },
   },
@@ -290,7 +294,7 @@ const roles = [
     group: 'botc',
     name: 'Seamstress',
     isEvil: false,
-    getStrength: () => 2,
+    getStrength: () => 1.5,
     ability: 'Knows if 2 players are the same team',
     getInfo(players, curPlayer) {
       const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
@@ -372,7 +376,7 @@ const roles = [
     name: 'Recluse',
     isEvil: false,
     getStrength: roles => (roles.filter(r => r.isEvil).length > 2 ? 0 : 0.5),
-    ability: 'Appears as Evil to Good',
+    ability: 'Appears as Evil to Goods',
   },
   {
     group: 'botc',
@@ -385,7 +389,7 @@ const roles = [
     group: 'botc',
     name: 'Spy',
     isEvil: true,
-    getStrength: () => 2.5,
+    getStrength: () => 3,
     ability: 'Knows a non-Merlin Good\'s role',
     getInfo(players, curPlayer) {
       const shuffled = shuffle(players.filter(
@@ -393,7 +397,7 @@ const roles = [
       ));
       return `${shuffled[0].player.name} is ${shuffled[0].role.name}. ${formatNamesList(
         'Your teammate',
-        getMinionInfo(players, curPlayer),
+        getEvilTeammates(players, curPlayer),
       )}`;
     },
   },
@@ -406,7 +410,7 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        getMinionInfo(players, curPlayer),
+        getEvilTeammates(players, curPlayer),
       );
     },
   },
@@ -457,7 +461,7 @@ const roles = [
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
-        getMinionInfo(players, curPlayer),
+        getEvilTeammates(players, curPlayer),
       );
     },
   },
@@ -471,7 +475,11 @@ const roles = [
       const shuffled = shuffle(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
       ));
-      return shuffled[0]?.player.info ?? null;
+      const info = shuffled[0]?.player.info ?? 'none';
+      return `Info is "${info}". ${formatNamesList(
+        'Your teammate',
+        getEvilTeammates(players, curPlayer),
+      )}`;
     },
     secondPassInfo: true,
   },
@@ -481,6 +489,12 @@ const roles = [
     isEvil: true,
     getStrength: roles => (roles.length >= 7 ? 2.5 : 2),
     ability: 'When on Quest, can reveal role to fail without votes',
+    getInfo(players, curPlayer) {
+      return formatNamesList(
+        'Your teammate',
+        getEvilTeammates(players, curPlayer),
+      );
+    },
   },
 ] satisfies (Omit<Role, 'id'> & { maxCount?: number })[];
 

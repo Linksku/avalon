@@ -6,6 +6,7 @@ import shuffle from 'lodash/shuffle';
 import { useStore } from '../../stores/Store';
 import roles, { getPoisonedRandPlayers } from '../../consts/roles';
 import getRolesErr from './getRolesErr';
+import getStrengthDiff from './getStrengthDiff';
 
 import styles from './StartGameBtn.module.scss';
 
@@ -108,13 +109,7 @@ export default React.memo(function StartGameBtn() {
     setNumResets,
   } = useStore();
 
-  const selectedRolesArr = Array.from(selectedRoles).filter(r => r.name !== 'Drunk');
-  const strengthDiff = Array.from(selectedRoles).reduce(
-    (sum, role) => (role.isEvil
-      ? sum - role.getStrength(selectedRolesArr)
-      : sum + role.getStrength(selectedRolesArr)),
-    0,
-  );
+  const strengthDiff = getStrengthDiff(selectedRoles);
   const errMsg = getRolesErr(players, selectedRoles);
   return (
     <>
