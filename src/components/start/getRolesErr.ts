@@ -24,14 +24,15 @@ export default function getRolesErr(players: Map<number, Player>, selectedRoles:
   if (!selectedRoles.size) {
     return 'Select roles';
   }
-  const roleNames = [...selectedRoles].map(r => r.name);
+  const rolesArr = [...selectedRoles];
+  const roleNames = rolesArr.map(r => r.name);
 
-  const numGoods = [...selectedRoles].filter(r => !r.isEvil && r.name !== 'Drunk').length;
-  const numEvils = [...selectedRoles].filter(r => r.isEvil).length;
+  const numGoods = rolesArr.filter(r => !r.isEvil && r.name !== 'Drunk').length;
+  const numEvils = rolesArr.filter(r => r.isEvil).length;
   const expectedEvils = NUM_EVILS.get(players.size) as number;
   const expectedGoods = players.size - expectedEvils;
   if (numGoods !== expectedGoods || numEvils !== expectedEvils) {
-    return `Selected ${numGoods}/${expectedGoods} Good${numGoods === 1 ? '' : 's'} and ${numEvils}/${expectedEvils} Evil${numEvils === 1 ? '' : 's'}.`;
+    return `Selected ${numGoods}/${expectedGoods} Good${numGoods === 1 ? '' : 's'} and ${numEvils}/${expectedEvils} Evil${numEvils === 1 ? '' : 's'}`;
   }
 
   for (const role of selectedRoles) {
@@ -41,6 +42,11 @@ export default function getRolesErr(players: Map<number, Player>, selectedRoles:
     if (role.name === 'Merlin' && !roleNames.includes('Assassin') && roleNames.includes('Minion')) {
       return 'Merlin requires Assassin';
     }
+  }
+
+  if ((roleNames.includes('Drunk') || roleNames.includes('No Dashii'))
+    && rolesArr.some(r => r.cantBePoisoned)) {
+    return `${rolesArr.filter(r => r.cantBePoisoned).map(r => r.name).join(', ')} can't be drunk/poisoned`;
   }
 
   return null;

@@ -51,6 +51,7 @@ type Role = {
   isEvil: boolean,
   getStrength(roles: Role[]): number,
   ability: string,
+  cantBePoisoned?: boolean,
   minPlayers?: number,
   requiredRoles?: RoleName[],
   getInfo?: (players: { player: Player, role: Role }[], curPlayer: Player) => string | null,

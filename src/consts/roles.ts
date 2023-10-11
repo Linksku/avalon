@@ -257,6 +257,7 @@ const roles = [
     isEvil: false,
     getStrength: () => 1.5,
     ability: 'After 2 failed Quests, view a player\'s role',
+    cantBePoisoned: true,
   },
   {
     group: 'botc',
@@ -279,7 +280,7 @@ const roles = [
     name: 'Grandmother',
     isEvil: false,
     getStrength: () => 1.5,
-    ability: 'Knows aa Good player\'s role. Must approve Quests containing them',
+    ability: 'Knows a Good player\'s role. Must approve Quests containing them',
     getInfo(players, curPlayer) {
       const shuffled = shuffle(players.filter(p => p.player !== curPlayer && !appearsAsEvilToGood(p)));
       return `${shuffled[0].player.name} is ${appearsAsRole(shuffled[0].role, players, curPlayer)}`;
