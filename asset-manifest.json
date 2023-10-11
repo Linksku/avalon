@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/avalon/static/css/main.0328ef48.css",
-    "main.js": "/avalon/static/js/main.0f52933c.js",
+    "main.js": "/avalon/static/js/main.1aefb1f0.js",
     "index.html": "/avalon/index.html",
     "static/media/check-circle-light.svg": "/avalon/static/media/check-circle-light.ab5a1d1a6ed681624fb7d095b442793c.svg",
     "static/media/door-open-regular.svg": "/avalon/static/media/door-open-regular.54fe6061b14d568238c8a47a69104f91.svg",
     "main.0328ef48.css.map": "/avalon/static/css/main.0328ef48.css.map",
-    "main.0f52933c.js.map": "/avalon/static/js/main.0f52933c.js.map"
+    "main.1aefb1f0.js.map": "/avalon/static/js/main.1aefb1f0.js.map"
   },
   "entrypoints": [
     "static/css/main.0328ef48.css",
-    "static/js/main.0f52933c.js"
+    "static/js/main.1aefb1f0.js"
   ]
 }
