@@ -49,6 +49,7 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
     role: roles.get(p.roleId as number) as Role,
   }));
   const roleNames = [...selectedRoles].map(r => r.name);
+
   if (roleNames.includes('Drunk')) {
     const goods = playersArr.filter(p => !p.role.isEvil);
     const drunk = shuffle(goods)[0];
@@ -73,6 +74,14 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
     } else if (!right.role.isEvil) {
       right.player.isPoisoned = true;
     }
+  }
+
+  if (roleNames.includes('Lunatic')) {
+    const lunatic = playersArr.find(p => p.role.name === 'Lunatic')!;
+    const evils = playersArr.filter(p => !p.role.isEvil);
+    const drunkAs = shuffle(evils)[0];
+    lunatic.player.isPoisoned = true;
+    lunatic.player.drunkAs = drunkAs.role.id;
   }
 
   for (const p of playersArr) {
