@@ -177,6 +177,11 @@ export default function NightPage() {
                   }, 500) as unknown as number;
                 }
               }}
+              onPointerUp={() => {
+                if (longPressTimer.current) {
+                  clearTimeout(longPressTimer.current);
+                }
+              }}
               onPointerOut={() => {
                 if (longPressTimer.current) {
                   clearTimeout(longPressTimer.current);

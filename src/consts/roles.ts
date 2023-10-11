@@ -2,6 +2,10 @@ import shuffle from 'lodash/shuffle';
 
 let rolesMap: Map<number, Role>;
 
+function randElem<T>(arr: T[]): T | undefined {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 function formatNamesList(prefix: string, names: string[]) {
   if (!names.length) {
     return null;
@@ -36,18 +40,25 @@ function appearsAsRole(
   curPlayer: Player,
 ): RoleName {
   const curPlayerRole = rolesMap.get(curPlayer.roleId!)!;
-  const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
   if (role.name === 'Recluse') {
-    return shuffled.filter(p => p.role.name !== 'Recluse' && appearsAsEvilToGood(p))[0]?.role.name ?? 'Recluse';
+    return randElem(players.filter(
+      p => p.player !== curPlayer && p.role.name !== 'Recluse' && appearsAsEvilToGood(p),
+    ))?.role.name ?? 'Recluse';
   }
   if (role.name === 'Untrustworthy Servant') {
-    return shuffled.filter(p => p.role.name !== 'Untrustworthy Servant' && appearsAsEvilToGood(p))[0]?.role.name ?? 'Untrustworthy Servant';
+    return randElem(players.filter(
+      p => p.player !== curPlayer && p.role.name !== 'Untrustworthy Servant' && appearsAsEvilToGood(p),
+    ))?.role.name ?? 'Untrustworthy Servant';
   }
   if (role.name === 'Mordred' && !curPlayerRole.isEvil) {
-    return shuffled.filter(p => p.role.name !== 'Mordred' && !appearsAsEvilToGood(p))[0]?.role.name ?? 'Mordred';
+    return randElem(players.filter(
+      p => p.player !== curPlayer && p.role.name !== 'Mordred' && !appearsAsEvilToGood(p),
+    ))?.role.name ?? 'Mordred';
   }
   if (role.name === 'Magician' && curPlayerRole.isEvil) {
-    return shuffled.filter(p => p.role.name !== 'Magician' && p.role.isEvil)[0]?.role.name ?? 'Magician';
+    return randElem(players.filter(
+      p => p.player !== curPlayer && p.role.name !== 'Magician' && p.role.isEvil,
+    ))?.role.name ?? 'Magician';
   }
   return role.name;
 }
@@ -259,13 +270,11 @@ const roles = [
     getStrength: () => 2,
     ability: 'Knows a player is a Good role or an Evil role',
     getInfo(players, curPlayer) {
-      const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
-      const player = shuffled[0];
+      const player = randElem(players.filter(p => p.player !== curPlayer))!;
       const player2 = appearsAsEvilToGood(player)
-        ? shuffled.find(p => !appearsAsEvilToGood(p))!
-        : shuffled.find(p => appearsAsEvilToGood(p))!;
-      const roles = [player.role, player2.role];
-      return `${player.player.name} is ${appearsAsRole(roles[0], players, curPlayer)} or ${appearsAsRole(roles[1], players, curPlayer)}`;
+        ? randElem(players.filter(p => p !== player && p.player !== curPlayer && !appearsAsEvilToGood(p)))!
+        : randElem(players.filter(p => p !== player && p.player !== curPlayer && appearsAsEvilToGood(p)))!;
+      return `${player.player.name} is ${appearsAsRole(player.role, players, curPlayer)} or ${appearsAsRole(player2.role, players, curPlayer)}`;
     },
   },
   {
@@ -275,8 +284,8 @@ const roles = [
     getStrength: () => 1.5,
     ability: 'Knows a Good player\'s role',
     getInfo(players, curPlayer) {
-      const shuffled = shuffle(players.filter(p => p.player !== curPlayer && !appearsAsEvilToGood(p)));
-      return `${shuffled[0].player.name} is ${appearsAsRole(shuffled[0].role, players, curPlayer)}`;
+      const p = randElem(players.filter(p => p.player !== curPlayer && !appearsAsEvilToGood(p)))!;
+      return `${p.player.name} is ${appearsAsRole(p.role, players, curPlayer)}`;
     },
   },
   {
@@ -332,7 +341,7 @@ const roles = [
       let max = 0;
       let curGap = 0;
       for (let i = 0; i < players.length * 2; i++) {
-        if (players[i * players.length].role.isEvil) {
+        if (players[i % players.length].role.isEvil) {
           max = Math.max(max, curGap);
           curGap = 0;
         } else {
@@ -378,10 +387,9 @@ const roles = [
         return null;
       }
       if (drunk.player === curPlayer) {
-        const shuffled = shuffle(players.filter(
+        const fakeDrunk = randElem(players.filter(
           p => p.player !== curPlayer && !p.role.isEvil && p.role.getInfo,
         ));
-        const fakeDrunk = shuffled[0];
         if (!fakeDrunk) {
           return null;
         }
@@ -408,10 +416,10 @@ const roles = [
     getStrength: () => 3,
     ability: 'Knows a Good player\'s role',
     getInfo(players, curPlayer) {
-      const shuffled = shuffle(players.filter(
+      const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.role.name !== 'Merlin',
-      ));
-      return `${shuffled[0].player.name} is ${shuffled[0].role.name}. ${formatNamesList(
+      ))!;
+      return `${player.player.name} is ${player.role.name}. ${formatNamesList(
         'Your teammate',
         getEvilTeammates(players, curPlayer),
       )}`;
@@ -467,10 +475,10 @@ const roles = [
     getStrength: () => 1.5,
     ability: 'Assassinations against 1 player doesn\'t count',
     getInfo(players, curPlayer) {
-      const shuffled = shuffle(players.filter(
+      const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.role.name !== 'Merlin',
-      ));
-      return `Protecting ${shuffled[0].player.name}`;
+      ))!;
+      return `Protecting ${player.player.name}`;
     },
   },
   {
@@ -480,10 +488,10 @@ const roles = [
     getStrength: () => 1.5,
     ability: 'Knows a Good player\'s info',
     getInfo(players, curPlayer) {
-      const shuffled = shuffle(players.filter(
+      const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
       ));
-      return shuffled[0]?.player.info ?? null;
+      return `Info is "${player?.player.info ?? 'none'}"`;
     },
     secondPassInfo: true,
   },
@@ -527,10 +535,10 @@ const roles = [
     getStrength: () => 2.5,
     ability: 'Knows a Good player\'s info',
     getInfo(players, curPlayer) {
-      const shuffled = shuffle(players.filter(
+      const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
       ));
-      const info = shuffled[0]?.player.info ?? 'none';
+      const info = player?.player.info ?? 'none';
       return `Info is "${info}". ${formatNamesList(
         'Your teammate',
         getEvilTeammates(players, curPlayer),
