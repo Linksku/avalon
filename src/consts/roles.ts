@@ -440,7 +440,7 @@ const roles = [
       const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.role.name !== 'Merlin',
       ))!;
-      return `${player.player.name} is ${player.role.name}. ${formatNamesList(
+      return `${player.player.name} is ${player.role.name}.\n${formatNamesList(
         'Your teammate',
         getEvilTeammates(players, curPlayer),
       )}`;
@@ -571,7 +571,7 @@ const roles = [
     group: 'werewolf',
     name: 'Mystic Wolf',
     isEvil: true,
-    getStrength: () => 2.5,
+    getStrength: () => 3,
     ability: 'Knows a Good player\'s info',
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(
@@ -580,7 +580,7 @@ const roles = [
       const info = curPlayer.isPoisoned && player
         ? getPoisonedInfo(player, players)
         : player?.player.info;
-      return `Info is "${info ?? 'none'}". ${formatNamesList(
+      return `Info is "${info ?? 'none'}".\n${formatNamesList(
         'Your teammate',
         getEvilTeammates(players, curPlayer),
       )}`;

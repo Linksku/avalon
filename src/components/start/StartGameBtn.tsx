@@ -31,8 +31,8 @@ function randInfo(players: { player: Player, role: Role }[], curPlayer: Player) 
   const question = shuffle([
     `How many spaces are between ${otherPlayerNames[0]} and ${otherPlayerNames[1]}?`,
     `How far is ${otherPlayerNames[0]} from you?`,
-    `What color clothes is ${otherPlayerNames[0]} wearing?`,
     `Do you trust ${otherPlayerNames[0]} or ${otherPlayerNames[1]} more?`,
+    `Quickly glance at ${otherPlayerNames[0]} and look confused.`,
   ])[0];
   return `Pretend you got information. ${question}`;
 }

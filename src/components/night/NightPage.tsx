@@ -122,11 +122,17 @@ export default function NightPage() {
   const longPressTimer = useRef<number | null>(null);
   const shuffledRoles = useRef(shuffle([...selectedRoles]));
 
+  const printedPlayers = useRef<Map<number, Player> | null>(null);
   useEffect(() => {
+    if (printedPlayers.current === players) {
+      return;
+    }
+
     for (const player of players.values()) {
       const role = roles.get(player.roleId!);
       console.log(`${player.name} (${role?.name}):`, player.info, player, role);
     }
+    printedPlayers.current = players;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
