@@ -279,7 +279,7 @@ const roles = [
   },
   {
     group: 'botc',
-    name: 'Grandmother',
+    name: 'Steward',
     isEvil: false,
     getStrength: () => 1.5,
     ability: 'Knows a Good player\'s role',
@@ -353,9 +353,21 @@ const roles = [
   },
   {
     group: 'botc',
+    name: 'Mutant',
+    isEvil: false,
+    getStrength: () => 0.5,
+    ability: 'Can\'t reveal role',
+  },
+  {
+    group: 'botc',
     name: 'Magician',
     isEvil: false,
-    getStrength: roles => (roles.filter(r => r.isEvil && r.name !== 'Oberon' && r.name !== 'Evil Lancelot').length >= 2 ? 2 : 1),
+    getStrength: roles => {
+      const visibleEvils = roles.filter(
+        r => r.isEvil && r.name !== 'Oberon' && r.name !== 'Evil Lancelot' && r.name !== 'Dream Wolf',
+      );
+      return visibleEvils.length >= 2 ? 2 : 1;
+    },
     ability: 'Appears as Evil to Evils',
   },
   {
@@ -527,6 +539,13 @@ const roles = [
         getEvilTeammates(players, curPlayer),
       );
     },
+  },
+  {
+    group: 'werewolf',
+    name: 'Dream Wolf',
+    isEvil: true,
+    getStrength: () => 1.5,
+    ability: 'Doesn\'t know Evils',
   },
   {
     group: 'werewolf',
