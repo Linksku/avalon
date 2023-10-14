@@ -421,7 +421,7 @@ const roles = [
       const drunkAs = rolesMap.get(drunk.player.drunkAs!)!;
       return `Fake info: "${drunk.player.info}"\nReal info: "${drunkAs.getInfo?.(players, drunk.player) ?? 'None'}"`;
     },
-    secondPassInfo: true,
+    runsLastPriority: 1,
   },
   {
     group: 'botc',
@@ -525,7 +525,7 @@ const roles = [
       };
       return `Info is "${info ?? 'none'}"`;
     },
-    secondPassInfo: true,
+    runsLastPriority: 2,
   },
   {
     group: 'werewolf',
@@ -585,7 +585,7 @@ const roles = [
         getEvilTeammates(players, curPlayer),
       )}`;
     },
-    secondPassInfo: true,
+    runsLastPriority: 3,
   },
   {
     group: 'misc',

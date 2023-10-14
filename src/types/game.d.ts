@@ -61,7 +61,8 @@ type Role = {
   minPlayers?: number,
   requiredRoles?: RoleName[],
   getInfo?: (players: { player: Player, role: Role }[], curPlayer: Player) => string | null,
-  secondPassInfo?: boolean,
+  // Depends on other players' info, highest = last
+  runsLastPriority?: number,
 };
 
 type Player = {

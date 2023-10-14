@@ -84,6 +84,7 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
     lunatic.player.drunkAs = drunkAs.role.id;
   }
 
+  playersArr.sort((a, b) => (a.role.runsLastPriority ?? 0) - (b.role.runsLastPriority ?? 0));
   for (const p of playersArr) {
     if (p.player.isPoisoned) {
       const role = p.player.drunkAs
@@ -94,16 +95,7 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
     } else {
       p.player.info = p.role.getInfo?.(playersArr, p.player) ?? undefined;
     }
-  }
 
-  const secondPass = playersArr.filter(p => p.role.secondPassInfo);
-  if (secondPass.length) {
-    for (const p of secondPass) {
-      p.player.info = p.role.getInfo?.(playersArr, p.player) ?? p.player.info ?? undefined;
-    }
-  }
-
-  for (const p of playersArr) {
     p.player.info ??= randInfo(playersArr, p.player);
   }
 }
