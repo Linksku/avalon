@@ -17,11 +17,14 @@ function formatNamesList(prefix: string, names: string[]) {
 }
 
 function getEvilTeammates(players: { player: Player, role: Role }[], curPlayer: Player) {
-  return shuffle(players
+  let teammates = players
     .filter(p => p.player !== curPlayer
       && (p.role.isEvil || (p.role.name === 'Magician' && !p.player.isPoisoned))
-      && (p.role.name !== 'Oberon' || p.player.isPoisoned))
-    .map(p => p.player.name));
+      && (p.role.name !== 'Oberon' || p.player.isPoisoned));
+  if (curPlayer.isPoisoned) {
+    teammates = teammates.filter(p => p.player !== curPlayer).slice(0, teammates.length);
+  }
+  return shuffle(teammates).map(p => p.player.name);
 }
 
 function appearsAsEvilToGood({ player, role }: { role: Role, player: Player }) {
@@ -69,6 +72,14 @@ export function getPoisonedRandPlayers(players: { player: Player, role: Role }[]
     player: p.player,
     role: shuffledRoles.pop()!,
   }));
+}
+
+export function getPoisonedInfo(
+  player: { player: Player, role: Role },
+  players: { player: Player, role: Role }[],
+) {
+  const randPlayers = getPoisonedRandPlayers(players);
+  return player.role.getInfo!(randPlayers, player.player);
 }
 
 const roles = [
@@ -398,16 +409,14 @@ const roles = [
       if (!drunk) {
         return null;
       }
-      if (drunk.player === curPlayer) {
+      if (drunk.player === curPlayer || curPlayer.isPoisoned) {
         const fakeDrunk = randElem(players.filter(
           p => p.player !== curPlayer && !p.role.isEvil && p.role.getInfo,
         ));
         if (!fakeDrunk) {
           return null;
         }
-        const randPlayers1 = getPoisonedRandPlayers(players);
-        const randPlayers2 = getPoisonedRandPlayers(players);
-        return `Fake info: "${fakeDrunk.role.getInfo!(randPlayers1, fakeDrunk.player)}"\nReal info: "${fakeDrunk.role.getInfo!(randPlayers2, fakeDrunk.player)}"`;
+        return `Fake info: "${getPoisonedInfo(fakeDrunk, players)}"\nReal info: "${getPoisonedInfo(fakeDrunk, players)}"`;
       }
       const drunkAs = rolesMap.get(drunk.player.drunkAs!)!;
       return `Fake info: "${drunk.player.info}"\nReal info: "${drunkAs.getInfo?.(players, drunk.player) ?? 'None'}"`;
@@ -501,9 +510,20 @@ const roles = [
     ability: 'Knows a Good player\'s info',
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(
-        p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
+        p => p.player !== curPlayer && !appearsAsEvilToGood(p) && p.player.info,
       ));
-      return `Info is "${player?.player.info ?? 'none'}"`;
+      let info: Nullish<string>;
+      if (curPlayer.isPoisoned || player?.role.isEvil) {
+        const good = randElem(players.filter(
+          p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
+        ));
+        if (good) {
+          info = getPoisonedInfo(good, players);
+        }
+      } else if (player) {
+        info = player?.player.info;
+      };
+      return `Info is "${info ?? 'none'}"`;
     },
     secondPassInfo: true,
   },
@@ -557,8 +577,10 @@ const roles = [
       const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
       ));
-      const info = player?.player.info ?? 'none';
-      return `Info is "${info}". ${formatNamesList(
+      const info = curPlayer.isPoisoned && player
+        ? getPoisonedInfo(player, players)
+        : player?.player.info;
+      return `Info is "${info ?? 'none'}". ${formatNamesList(
         'Your teammate',
         getEvilTeammates(players, curPlayer),
       )}`;
