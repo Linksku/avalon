@@ -52,7 +52,10 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
 
   if (roleNames.includes('Drunk')) {
     const goods = playersArr.filter(p => !p.role.isEvil);
-    const drunk = shuffle(goods)[0];
+    const shuffled = shuffle(goods);
+    const drunk = roleNames.includes('Puzzlemaster')
+      ? (shuffled.filter(p => p.role.getInfo)[0] ?? shuffled[0])
+      : shuffled[0];
     drunk.player.drunkAs = drunk.role.id;
     drunk.player.roleId = [...selectedRoles].find(r => r.name === 'Drunk')!.id;
     drunk.player.isPoisoned = true;

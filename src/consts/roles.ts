@@ -456,10 +456,11 @@ const roles = [
         if (!fakeDrunk) {
           return null;
         }
-        return `Fake info: "${getPoisonedInfo(fakeDrunk, players)}"\nReal info: "${getPoisonedInfo(fakeDrunk, players)}"`;
+        const drunkAs = rolesMap.get(fakeDrunk.player.drunkAs!)!;
+        return `${drunkAs.name} is Drunk.\nFake info: "${getPoisonedInfo(fakeDrunk, players)}"\nReal info: "${getPoisonedInfo(fakeDrunk, players)}"`;
       }
       const drunkAs = rolesMap.get(drunk.player.drunkAs!)!;
-      return `Fake info: "${drunk.player.info}"\nReal info: "${drunkAs.getInfo?.(players, drunk.player) ?? 'None'}"`;
+      return `${drunkAs.name} is Drunk.\nFake info: "${drunk.player.info}"\nReal info: "${drunkAs.getInfo?.(players, drunk.player) ?? 'None'}"`;
     },
     runsLastPriority: 1,
   },
