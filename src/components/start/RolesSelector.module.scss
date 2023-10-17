@@ -26,8 +26,8 @@
   background-color: #fdfdfd;
   transition: background-color 0.2s;
   min-height: 100%;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
 }
 
 .nameWrap {
@@ -49,6 +49,7 @@
   color: #1976D2;
   transition: color 0.2s;
   margin: 0;
+  letter-spacing: -0.2px;
 
   &:last-child {
     margin-bottom: 0;

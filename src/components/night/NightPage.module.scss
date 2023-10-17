@@ -23,12 +23,13 @@
 .cardContent {
   background-color: #fdfdfd;
   min-height: 100%;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
 }
 
 .roleName {
   color: #1976D2;
+  letter-spacing: -0.2px;
 }
 
 .roleNameEvil {
