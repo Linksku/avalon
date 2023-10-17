@@ -14,27 +14,25 @@ export const [
         if (!parsed || !parsed.gameState || !parsed.players || !parsed.selectedRoles) {
           return null;
         }
-        const temp = {
-          gameState: parsed.gameState,
-          players: new Map(parsed.players),
-          selectedRoles: new Set(parsed.selectedRoles.map((data: any) => {
+        const selectedRoles = Array.isArray(parsed.selectedRoles)
+          ? (parsed.selectedRoles as any[]).map(data => {
             const role = roles.get(data.id);
             if (!role || role.name !== data.name) {
               return null;
             }
             return role;
-          })),
-        };
-        if ((temp.players.size !== temp.selectedRoles.size
-            && temp.players.size !== temp.selectedRoles.size - 1)
-          || [...temp.selectedRoles].some(role => !role)
-          || temp.players.size < 5) {
-          return null;
-        }
-        return temp as {
-          gameState: GameState,
-          players: Map<number, Player>,
-          selectedRoles: Set<Role>,
+          })
+          : [];
+        return {
+          gameState: (typeof parsed.gameState === 'string'
+            ? parsed.gameState
+            : 'start') as GameState,
+          players: (Array.isArray(parsed.players)
+            ? new Map(parsed.players)
+            : new Map()) as Map<number, Player>,
+          selectedRoles: selectedRoles.every(r => r)
+            ? new Set(selectedRoles as Role[])
+            : new Set<Role>(),
         };
       } catch (err) {
         console.log(err);
@@ -46,22 +44,27 @@ export const [
     const [players, setPlayers] = useState(defaultState?.players ?? new Map<number, Player>());
     const [selectedRoles, setSelectedRoles] = useState(defaultState?.selectedRoles ?? new Set<Role>());
 
-    const setGameState = useCallback((newState: GameState) => {
+    const saveGameState = useCallback(() => {
       localStorage.setItem('avalonState', JSON.stringify({
-        gameState: newState,
+        gameState,
         players: [...players.entries()],
         selectedRoles: Array.from(selectedRoles).map(r => ({
           id: r.id,
           name: r.name,
         })),
       }));
+    }, [gameState, players, selectedRoles]);
+
+    const setGameState = useCallback((newState: GameState) => {
+      saveGameState();
       _setGameState(newState);
       window.scrollTo(0, 0);
-    }, [players, selectedRoles]);
+    }, [saveGameState]);
 
     return {
       gameState,
       setGameState,
+      saveGameState,
       numResets,
       setNumResets,
       players,

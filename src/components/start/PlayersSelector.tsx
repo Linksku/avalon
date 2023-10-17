@@ -1,12 +1,13 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 import { useStore } from '../../stores/Store';
 
 import styles from './PlayersSelector.module.scss';
 
 export default React.memo(function PlayersSelector() {
-  const { players, setPlayers, numResets } = useStore();
+  const { players, setPlayers, numResets, saveGameState } = useStore();
 
   const playerIds = [...players.values()].map(p => p.id);
   const nextId = Math.max(0, ...playerIds) + 1;
@@ -64,6 +65,18 @@ export default React.memo(function PlayersSelector() {
           />
         );
       })}
+
+      <div className={styles.saveBtnWrap}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            saveGameState();
+          }}
+        >
+          Save
+        </Button>
+      </div>
     </div>
   );
 });
