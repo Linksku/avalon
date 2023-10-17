@@ -40,6 +40,18 @@
   font-size: 0.9em;
 }
 
+.winCons {
+  padding: 0 1rem 1rem 1rem;
+}
+
+.goodWinCon {
+  color: #1976D2;
+}
+
+.evilWinCon {
+  color: #D32F2F;
+}
+
 .players {
   padding: 0 1rem 2rem 1rem;
   display: grid;
@@ -108,8 +120,4 @@
 
 .playerInfo {
   white-space: pre-wrap;
-}
-
-.assassination {
-  padding: 0 1rem 2rem 1rem;
 }

@@ -13,11 +13,10 @@ import TopBar from '../TopBar';
 import styles from './NightPage.module.scss';
 import clsx from 'clsx';
 
-const AssassinationSection = React.memo(function AssassinationSection({ selectedRoles }: {
+const WinConsSection = React.memo(function WinConsSection({ selectedRoles }: {
   selectedRoles: Set<Role>,
 }) {
   const rolesArr = useMemo(() => [...selectedRoles], [selectedRoles]);
-  const untrustworthy = rolesArr.find(role => role.name === 'Untrustworthy Servant');
   const hasMerlin = rolesArr.some(role => role.name === 'Merlin');
   const assassin = useMemo(
     () => (rolesArr.find(role => role.name === 'Assassin')
@@ -32,30 +31,44 @@ const AssassinationSection = React.memo(function AssassinationSection({ selected
   const numGoods = rolesArr.filter(role => !role.isEvil).length;
   const hasDrunk = rolesArr.some(role => role.name === 'Drunk');
 
-  return untrustworthy || hasMerlin || numPowerGoods >= numGoods / 2
-    ? (
-      <>
-        <h2 className={styles.title}>Assassination</h2>
-        <div className={styles.assassination}>
-          <p>If Good wins 3 Quests:</p>
-          <ol>
-            {untrustworthy && (
-              <li>Assassin guesses Untrustworthy Servant to recruit</li>
-            )}
-            {hasMerlin && (
-              <li>{assassin.name} guesses Merlin to win</li>
-            )}
-            {numPowerGoods >= numGoods / 2 && (
-              <li>Evil guesses half of Goods to win</li>
-            )}
-          </ol>
-          {hasDrunk && (
-            <p>* Can guess Drunk as their fake role</p>
-          )}
-        </div>
-      </>
-    )
-  : null;
+  const evilWinCons = ['3 Quests fail'];
+  if (hasMerlin) {
+    evilWinCons.push(`${assassin.name} guesses Merlin`);
+  }
+  if (numPowerGoods >= numGoods / 2) {
+    evilWinCons.push('Evil guesses half of Goods');
+  }
+  return (
+    <>
+      <h2 className={styles.title}>Win Conditions</h2>
+      <div className={styles.winCons}>
+        <p>
+          <span className={styles.goodWinCon}>Good</span>
+          {' wins if 3 Quests fail'}
+        </p>
+        {rolesArr.some(role => role.name === 'Lone Wolf') && (
+          <p>
+            <span className={styles.evilWinCon}>Lone Wolf</span>
+            {' wins if Lone Wolf is on the 3rd failing quest'}
+          </p>
+        )}
+        {rolesArr.some(role => role.name === 'Tanner') && (
+          <p>
+            <span className={styles.evilWinCon}>Tanner</span>
+            {' wins if 3 Quests fail and Tanner never played a Fail'}
+          </p>
+        )}
+        <p>
+          <span className={styles.evilWinCon}>Evil</span>
+          {' '}
+          wins if {evilWinCons.join(' OR ')}
+        </p>
+        {hasDrunk && (
+          <p>* Can guess Drunk as their fake role</p>
+        )}
+      </div>
+    </>
+  );
 });
 
 const PlayerSlideUp = React.memo(function PlayerSlideUp({ player, role, onClose }: {
@@ -166,6 +179,8 @@ export default function NightPage() {
           ))}
         </div>
 
+        <WinConsSection selectedRoles={selectedRoles} />
+
         <h2 className={styles.title}>Player Roles</h2>
         <div className={styles.players}>
           {[...players.values()].map(player => (
@@ -206,8 +221,6 @@ export default function NightPage() {
             </Card>
           ))}
         </div>
-
-        <AssassinationSection selectedRoles={selectedRoles} />
       </div>
 
       <PlayerSlideUp
