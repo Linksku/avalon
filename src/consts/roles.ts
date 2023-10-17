@@ -364,6 +364,30 @@ const roles = [
   },
   {
     group: 'botc',
+    name: 'Shugenja',
+    isEvil: false,
+    getStrength: () => 1.5,
+    ability: 'Knows if closest Evil is before or after',
+    getInfo(players, curPlayer) {
+      const curIdx = players.findIndex(p => p.player === curPlayer);
+      const evilDists = players
+        .map((p, i) => (p.role.isEvil
+          ? {
+            before: i > curIdx ? i - curIdx : players.length + i - curIdx,
+            after: i < curIdx ? curIdx - i : curIdx + players.length - i,
+          }
+          : null))
+        .filter(Boolean) as { before: number, after: number }[];
+      const minDist = Math.min(...evilDists.map(d => Math.min(d.before, d.after)));
+      const closest = shuffle(evilDists.filter(d => Math.min(d.before, d.after) === minDist));
+      if (closest[0].before === closest[0].after) {
+        return `Closest is ${Math.random() < 0.5 ? 'before' : 'after'}`;
+      }
+      return `Closest is ${closest[0].before < closest[0].after ? 'before' : 'after'}`;
+    },
+  },
+  {
+    group: 'botc',
     name: 'Mutant',
     isEvil: false,
     getStrength: () => 0.5,

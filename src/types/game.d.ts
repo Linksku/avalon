@@ -30,6 +30,7 @@ type RoleName =
   | 'Noble'
   | 'Chef'
   | 'Clockmaker'
+  | 'Shugenja'
   | 'Mutant'
   | 'Magician'
   | 'Lunatic'
