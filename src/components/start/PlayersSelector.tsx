@@ -16,7 +16,7 @@ export default React.memo(function PlayersSelector() {
       <h2>Players</h2>
 
       <p>Enter players in the seating order.</p>
-      {[...playerIds, nextId].map((id, idx) => {
+      {(playerIds.length >= 10 ? playerIds : [...playerIds, nextId]).map((id, idx) => {
         const player = players.get(id);
         return (
           <TextField
