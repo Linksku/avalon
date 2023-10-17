@@ -117,7 +117,7 @@ const roles = [
       if (!numKnownEvils) {
         return -1;
       }
-      return (numKnownEvils / 2) * (numKnownEvils / (numKnownEvils + numAppearEvils));
+      return Math.round(numKnownEvils * (numKnownEvils / (numKnownEvils + numAppearEvils))) / 2;
     },
     ability: 'Knows Evil',
     getInfo(players) {

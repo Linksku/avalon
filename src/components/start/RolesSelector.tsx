@@ -137,6 +137,7 @@ export default React.memo(function RolesSelector() {
             <div className={styles.roles}>
               {groupRoles.map(role => {
                 const selected = selectedRoles.has(role);
+                const strength = Math.round(role.getStrength(selectedRolesArr) * 10) / 10;
                 return (
                   <Card
                     key={role.id}
@@ -153,7 +154,7 @@ export default React.memo(function RolesSelector() {
                           {role.name}
                         </h3>
                         <div className={styles.strength}>
-                          {Math.round(role.getStrength(selectedRolesArr) * 10) / 10}
+                          {role.isEvil ? -strength : strength}
                         </div>
                       </div>
                       {role.ability && <div className={styles.ability}>{role.ability}</div>}
