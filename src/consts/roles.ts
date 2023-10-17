@@ -128,6 +128,7 @@ const roles = [
           .map(p => p.player.name),
       );
     },
+    isDeprioritized: true,
   },
   {
     group: 'avalon',
@@ -144,6 +145,7 @@ const roles = [
           .map(p => p.player.name),
       );
     },
+    isDeprioritized: true,
   },
   {
     group: 'avalon',
@@ -158,6 +160,7 @@ const roles = [
         getEvilTeammates(players, curPlayer),
       );
     },
+    isDeprioritized: true,
   },
   {
     group: 'avalon',
@@ -172,6 +175,7 @@ const roles = [
         getEvilTeammates(players, curPlayer),
       );
     },
+    isDeprioritized: true,
   },
   {
     group: 'avalon',
@@ -203,6 +207,7 @@ const roles = [
     getInfo(players) {
       return `Assassin is ${players.find(p => p.role.name === 'Assassin')?.player.name}`;
     },
+    isDeprioritized: true,
   },
   {
     group: 'avalon',

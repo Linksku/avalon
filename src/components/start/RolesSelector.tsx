@@ -29,9 +29,9 @@ export default React.memo(function RolesSelector() {
     let bestSelected: Set<Role> | undefined;
     let bestStrengthDiff = Number.POSITIVE_INFINITY;
     for (let i = 0; i < players.size; i++) {
-      const selected = new Set<Role>();
+      const selected: Role[] = [];
       let remainingRoles = shuffle([...roles.values()]);
-      while (selected.size - (selected.has(drunk) ? 1 : 0) < players.size) {
+      while (selected.length - (selected.includes(drunk) ? 1 : 0) < players.size) {
         const newSelected = remainingRoles.pop()!;
         if (newSelected.isDeprioritized && Math.random() < 0.5) {
           continue;
@@ -40,7 +40,7 @@ export default React.memo(function RolesSelector() {
         let cantAdd = false;
         if (newSelected.requiredRoles) {
           for (const r of newSelected.requiredRoles) {
-            if ([...selected].some(r2 => r2.name === r)) {
+            if (selected.some(r2 => r2.name === r)) {
               continue;
             }
 
@@ -48,7 +48,7 @@ export default React.memo(function RolesSelector() {
               r2 => r2.name === r && r2 !== newSelected,
             );
             if (idx >= 0) {
-              selected.add(remainingRoles[idx]);
+              selected.push(remainingRoles[idx]);
               remainingRoles.splice(idx, 1);
             } else {
               cantAdd = true;
@@ -57,25 +57,33 @@ export default React.memo(function RolesSelector() {
           }
         }
         if (!cantAdd) {
-          selected.add(newSelected);
+          selected.push(newSelected);
         }
 
-        if ([...selected].filter(r => !r.isEvil).length - (selected.has(drunk) ? 1 : 0)
+        if (selected.filter(r => !r.isEvil).length - (selected.includes(drunk) ? 1 : 0)
           >= players.size - NUM_EVILS.get(players.size)!) {
           remainingRoles = remainingRoles.filter(r => r.isEvil);
         }
-        if ([...selected].filter(r => r.isEvil).length >= NUM_EVILS.get(players.size)!) {
+        if (selected.filter(r => r.isEvil).length >= NUM_EVILS.get(players.size)!) {
           remainingRoles = remainingRoles.filter(r => !r.isEvil);
+        } else if (selected.some(r => r.name === 'Merlin')) {
+          const assassin = remainingRoles.find(r => r.name === 'Assassin');
+          if (assassin) {
+            selected.push(assassin);
+            remainingRoles = remainingRoles.filter(r => r.name !== 'Assassin');
+          }
         }
+
         if (!remainingRoles.length) {
           break;
         }
       }
 
-      const strengthDiff = getStrengthDiff(selected);
+      const selectedSet = new Set(selected);
+      const strengthDiff = getStrengthDiff(selectedSet);
       if (!bestSelected
-        || (!getRolesErr(players, selected) && Math.abs(strengthDiff) < bestStrengthDiff)) {
-        bestSelected = selected;
+        || (!getRolesErr(players, selectedSet) && Math.abs(strengthDiff) < bestStrengthDiff)) {
+        bestSelected = selectedSet;
         bestStrengthDiff = Math.abs(strengthDiff);
       }
     }
