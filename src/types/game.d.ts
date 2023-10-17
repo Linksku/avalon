@@ -65,6 +65,7 @@ type Role = {
   getInfo?: (players: { player: Player, role: Role }[], curPlayer: Player) => string | null,
   // Depends on other players' info, highest = last
   runsLastPriority?: number,
+  isDeprioritized?: boolean,
 };
 
 type Player = {

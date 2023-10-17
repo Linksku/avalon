@@ -211,6 +211,7 @@ const roles = [
     getStrength: () => 0,
     ability: 'Can switch teams with Evil Lancelot',
     requiredRoles: ['Evil Lancelot'],
+    isDeprioritized: true,
   },
   {
     group: 'avalon',
@@ -219,6 +220,7 @@ const roles = [
     getStrength: () => 1.5,
     ability: 'Can switch teams with Good Lancelot',
     requiredRoles: ['Good Lancelot'],
+    isDeprioritized: true,
   },
   {
     group: 'avalon',
@@ -399,6 +401,7 @@ const roles = [
     isEvil: false,
     getStrength: () => 0.5,
     ability: 'Can\'t reveal role',
+    isDeprioritized: true,
   },
   {
     group: 'botc',
@@ -533,6 +536,7 @@ const roles = [
       ))!;
       return `Protecting ${player.player.name}`;
     },
+    isDeprioritized: true,
   },
   {
     group: 'werewolf',
@@ -566,6 +570,7 @@ const roles = [
     isEvil: false,
     getStrength: () => 1,
     ability: 'Can reject once per round',
+    isDeprioritized: true,
   },
   {
     group: 'werewolf',
@@ -579,6 +584,7 @@ const roles = [
         getEvilTeammates(players, curPlayer),
       );
     },
+    isDeprioritized: true,
   },
   {
     disabled: true,
@@ -593,6 +599,7 @@ const roles = [
         getEvilTeammates(players, curPlayer),
       );
     },
+    isDeprioritized: true,
   },
   {
     group: 'werewolf',

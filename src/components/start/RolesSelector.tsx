@@ -33,6 +33,10 @@ export default React.memo(function RolesSelector() {
       let remainingRoles = shuffle([...roles.values()]);
       while (selected.size - (selected.has(drunk) ? 1 : 0) < players.size) {
         const newSelected = remainingRoles.pop()!;
+        if (newSelected.isDeprioritized && Math.random() < 0.5) {
+          continue;
+        }
+
         let cantAdd = false;
         if (newSelected.requiredRoles) {
           for (const r of newSelected.requiredRoles) {
