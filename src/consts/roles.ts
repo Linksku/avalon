@@ -109,7 +109,16 @@ const roles = [
     group: 'avalon',
     name: 'Merlin',
     isEvil: false,
-    getStrength: roles => 1 + (roles.filter(r => r.isEvil).length / 2),
+    getStrength: roles => {
+      const numKnownEvils = roles.filter(r => r.isEvil && r.name !== 'Mordred').length;
+      const numAppearEvils = roles.filter(
+        r => r.name === 'Recluse' || r.name === 'Untrustworthy Servant',
+      ).length;
+      if (!numKnownEvils) {
+        return -1;
+      }
+      return (numKnownEvils / 2) * (numKnownEvils / (numKnownEvils + numAppearEvils));
+    },
     ability: 'Knows Evil',
     getInfo(players) {
       return formatNamesList(
@@ -168,9 +177,7 @@ const roles = [
     group: 'avalon',
     name: 'Mordred',
     isEvil: true,
-    getStrength: roles => (roles.find(role => role.name === 'Merlin')
-      ? 2 + (roles.filter(r => !r.isEvil).length / 2)
-      : 3),
+    getStrength: () => 3,
     ability: 'Appears as Good to Goods',
     getInfo(players, curPlayer) {
       return formatNamesList(
@@ -417,8 +424,9 @@ const roles = [
     name: 'Drunk',
     isEvil: false,
     getStrength: roles => (roles.find(r => r.name === 'Merlin')
-      ? -2
-      : roles.filter(r => !r.isEvil).length > 4 ? -1.5 : -1),
+      || roles.filter(r => !r.isEvil).length > 4
+      ? -1.5
+      : -1),
     ability: 'Sees Good role with random info',
   },
   {
@@ -552,6 +560,7 @@ const roles = [
     runsLastPriority: 2,
   },
   {
+    disabled: true,
     group: 'werewolf',
     name: 'Village Idiot',
     isEvil: false,
@@ -572,6 +581,7 @@ const roles = [
     },
   },
   {
+    disabled: true,
     group: 'werewolf',
     name: 'Tanner',
     isEvil: true,
@@ -627,14 +637,16 @@ const roles = [
 ] satisfies (Omit<Role, 'id'> & { maxCount?: number })[];
 
 let nextId = 1;
-rolesMap = new Map(roles.flatMap(
-  ({ maxCount, ...role }) => Array.from({ length: maxCount ?? 1 }).map(() => [
-    nextId,
-    {
-      id: nextId++,
-      ...role,
-    },
-  ] as [number, Role]),
-));
+rolesMap = new Map(roles
+  .filter(role => !role.disabled)
+  .flatMap(
+    ({ maxCount, ...role }) => Array.from({ length: maxCount ?? 1 }).map(() => [
+      nextId,
+      {
+        id: nextId++,
+        ...role,
+      },
+    ] as [number, Role]),
+  ));
 
 export default rolesMap;

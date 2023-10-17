@@ -149,7 +149,7 @@ export default React.memo(function RolesSelector() {
                           {role.name}
                         </h3>
                         <div className={styles.strength}>
-                          {role.getStrength(selectedRolesArr)}
+                          {Math.round(role.getStrength(selectedRolesArr) * 10) / 10}
                         </div>
                       </div>
                       {role.ability && <div className={styles.ability}>{role.ability}</div>}

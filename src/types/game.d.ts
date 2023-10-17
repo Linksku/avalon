@@ -52,6 +52,7 @@ type RoleName =
   | 'Hitler';
 
 type Role = {
+  disabled?: boolean,
   id: number,
   group: RoleGroup,
   name: RoleName,
