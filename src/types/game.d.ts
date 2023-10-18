@@ -71,7 +71,9 @@ type Player = {
   id: number,
   name: string,
   roleId?: string,
+  // Poisoned: sees random info, other powers still work
   isPoisoned?: boolean,
+  // Drunk: sees random role with random info
   drunkAs?: string,
   info?: string,
 };
