@@ -1,17 +1,22 @@
-import React from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { ReactComponent as CheckSvg } from 'fontawesome-svgs/svg/check-circle-light.svg';
 import shuffle from 'lodash/shuffle';
+import clsx from 'clsx';
 
 import { useStore } from '../../stores/Store';
 import roles from '../../consts/roles';
 import TopBar from '../TopBar';
 
 import styles from './NightPage.module.scss';
-import clsx from 'clsx';
 
 const WinConsSection = React.memo(function WinConsSection({ selectedRoles }: {
   selectedRoles: Set<Role>,
@@ -61,7 +66,9 @@ const WinConsSection = React.memo(function WinConsSection({ selectedRoles }: {
         <p>
           <span className={styles.evilWinCon}>Evil</span>
           {' '}
-          wins if {evilWinCons.join(' OR ')}
+          wins if
+          {' '}
+          {evilWinCons.join(' OR ')}
         </p>
         {hasDrunk && (
           <p>* Can guess Drunk as their fake role</p>

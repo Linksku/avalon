@@ -319,6 +319,8 @@ const config = {
     // Low browser support
     'unicorn/prefer-modern-math-apis': 0,
     'unicorn/no-thenable': 0,
+    // Low browser support
+    'unicorn/prefer-at': 0,
   },
   overrides: [
     {

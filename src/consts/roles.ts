@@ -356,9 +356,9 @@ const roles = [
     ability: 'Knows 1 Evil is among 3 players',
     getInfo(players, curPlayer) {
       const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
-      const evils = shuffled.filter(p => appearsAsEvilToGood(p));
+      const evil = shuffled.find(p => appearsAsEvilToGood(p));
       const goods = shuffled.filter(p => !appearsAsEvilToGood(p));
-      return `Exactly 1 Evil is among ${shuffle([evils[0], ...goods.slice(0, 2)]).map(p => p.player.name).join(', ')}`;
+      return `Exactly 1 Evil is among ${shuffle([evil, ...goods.slice(0, 2)]).map(p => p.player.name).join(', ')}`;
     },
   },
   {

@@ -30,7 +30,7 @@ export const [
           players: (Array.isArray(parsed.players)
             ? new Map(parsed.players)
             : new Map()) as Map<number, Player>,
-          selectedRoles: selectedRoles.every(r => r)
+          selectedRoles: selectedRoles.every(Boolean)
             ? new Set(selectedRoles as Role[])
             : new Set<Role>(),
         };

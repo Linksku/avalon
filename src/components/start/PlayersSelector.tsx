@@ -7,7 +7,12 @@ import { useStore } from '../../stores/Store';
 import styles from './PlayersSelector.module.scss';
 
 export default React.memo(function PlayersSelector() {
-  const { players, setPlayers, numResets, saveGameState } = useStore();
+  const {
+    players,
+    setPlayers,
+    numResets,
+    saveGameState,
+  } = useStore();
 
   const playerIds = [...players.values()].map(p => p.id);
   const nextId = Math.max(0, ...playerIds) + 1;

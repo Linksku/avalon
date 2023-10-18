@@ -119,7 +119,7 @@ export default React.memo(function RolesSelector() {
         }
       }
       setSelectedRoles(newSelected);
-    }
+    };
   }
 
   return (
