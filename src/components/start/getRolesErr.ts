@@ -44,9 +44,11 @@ export default function getRolesErr(players: Map<number, Player>, selectedRoles:
     }
   }
 
-  if ((roleNames.includes('Drunk') || roleNames.includes('No Dashii'))
-    && rolesArr.some(r => r.cantBePoisoned)) {
-    return `${rolesArr.filter(r => r.cantBePoisoned).map(r => r.name).join(', ')} can't be drunk/poisoned`;
+  for (const role of selectedRoles) {
+    const otherRole = role.mutuallyExclusiveRoles?.find(r => roleNames.includes(r));
+    if (otherRole) {
+      return `Can't have both ${role.name} and ${otherRole}`;
+    }
   }
 
   return null;

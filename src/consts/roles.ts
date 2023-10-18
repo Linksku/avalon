@@ -256,6 +256,7 @@ const roles = [
     isEvil: true,
     getStrength: () => 1.5,
     ability: 'After 2 failed Quests, reveal role',
+    mutuallyExclusiveRoles: ['Ravenkeeper'],
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
@@ -309,7 +310,7 @@ const roles = [
     isEvil: false,
     getStrength: () => 1.5,
     ability: 'After 2 failed Quests, learn a player\'s role',
-    cantBePoisoned: true,
+    mutuallyExclusiveRoles: ['Revealer', 'Drunk', 'No Dashii'],
   },
   {
     group: 'botc',
@@ -326,6 +327,7 @@ const roles = [
     },
   },
   {
+    disabled: true,
     group: 'botc',
     name: 'Steward',
     isEvil: false,
@@ -493,6 +495,7 @@ const roles = [
     isEvil: true,
     getStrength: () => 3,
     ability: 'Knows a Good player\'s role',
+    mutuallyExclusiveRoles: ['Merlin'],
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.role.name !== 'Merlin',
@@ -544,7 +547,7 @@ const roles = [
     isEvil: false,
     getStrength: () => 1.5,
     ability: 'Assassinations against 1 player doesn\'t count',
-    cantBePoisoned: true,
+    mutuallyExclusiveRoles: ['Drunk', 'No Dashii'],
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.role.name !== 'Merlin',
@@ -633,8 +636,18 @@ const roles = [
     group: 'werewolf',
     name: 'Mystic Wolf',
     isEvil: true,
-    getStrength: () => 3,
+    getStrength: () => 2.5,
     ability: 'Knows a Good player\'s info',
+    mutuallyExclusiveRoles: [
+      'Merlin',
+      'Percival',
+      'Untrustworthy Servant',
+      'Washerwoman',
+      'Dreamer',
+      'Puzzlemaster',
+      'Mason',
+      'Doppleganger',
+    ],
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
