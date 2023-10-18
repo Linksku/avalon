@@ -11,12 +11,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       "last 3 years",
@@ -50,9 +44,15 @@
     "@types/node": "^20.8.3",
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.11",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
     "boxicons": "^2.1.4",
     "clsx": "^2.0.0",
     "constate": "^3.3.2",
+    "eslint": "^8.51.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-unicorn": "^48.0.1",
     "fontawesome-svgs": "https://github.com/seanyeh/fontawesome-svgs.git",
     "gh-pages": "^6.0.0",
     "lodash": "^4.17.21",
@@ -62,6 +62,7 @@
     "react-scripts": "5.0.1",
     "sass": "^1.69.0",
     "typescript": "^5.2.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yargs": "^17.7.2"
   }
 }
