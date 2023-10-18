@@ -40,14 +40,20 @@ function randInfo(players: { player: Player, role: Role }[], curPlayer: Player) 
 function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
   const shuffledRoles = shuffle([...selectedRoles])
     .filter(r => r.name !== 'Drunk');
-  for (const player of players.values()) {
-    player.roleId = shuffledRoles.pop()?.id;
+  if (shuffledRoles.length !== players.size) {
+    throw new Error('Mismatched number of roles and players');
   }
 
-  const playersArr = [...players.values()].map(p => ({
-    player: p,
-    role: roles.get(p.roleId as number) as Role,
-  }));
+  const playersArr: { player: Player, role: Role }[] = [];
+  for (const player of players.values()) {
+    const curRole = shuffledRoles.pop()!;
+    player.roleId = curRole.id;
+    playersArr.push({
+      player,
+      role: curRole,
+    });
+  }
+
   const roleNames = [...selectedRoles].map(r => r.name);
 
   if (roleNames.includes('Drunk')) {
