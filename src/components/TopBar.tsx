@@ -24,6 +24,7 @@ export default React.memo(function TopBar() {
                   delete player.roleId;
                   delete player.isPoisoned;
                   delete player.drunkAs;
+                  delete player.info;
                 }
                 setGameState('start');
               }

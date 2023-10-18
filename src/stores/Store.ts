@@ -44,9 +44,9 @@ export const [
     const [players, setPlayers] = useState(defaultState?.players ?? new Map<number, Player>());
     const [selectedRoles, setSelectedRoles] = useState(defaultState?.selectedRoles ?? new Set<Role>());
 
-    const saveGameState = useCallback(() => {
+    const saveGameState = useCallback((newState?: GameState) => {
       localStorage.setItem('avalonState', JSON.stringify({
-        gameState,
+        gameState: newState ?? gameState,
         players: [...players.entries()],
         selectedRoles: Array.from(selectedRoles).map(r => ({
           id: r.id,
@@ -56,7 +56,7 @@ export const [
     }, [gameState, players, selectedRoles]);
 
     const setGameState = useCallback((newState: GameState) => {
-      saveGameState();
+      saveGameState(newState);
       _setGameState(newState);
       window.scrollTo(0, 0);
     }, [saveGameState]);
