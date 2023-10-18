@@ -1,6 +1,6 @@
 import shuffle from 'lodash/shuffle';
 
-let rolesMap: Map<number, Role>;
+let rolesMap: Map<string, Role>;
 
 function randElem<T>(arr: T[]): T | undefined {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -658,17 +658,19 @@ const roles = [
   },
 ] satisfies (Omit<Role, 'id'> & { maxCount?: number })[];
 
-let nextId = 1;
 rolesMap = new Map(roles
   .filter(role => !role.disabled)
   .flatMap(
-    ({ maxCount, ...role }) => Array.from({ length: maxCount ?? 1 }).map(() => [
-      nextId,
-      {
-        id: nextId++,
-        ...role,
-      },
-    ] as [number, Role]),
+    ({ maxCount, ...role }) => Array.from({ length: maxCount ?? 1 }).map((_, idx) => {
+      const id = `${role.name}${idx}`;
+      return [
+        id,
+        {
+          id,
+          ...role,
+        },
+      ] as [string, Role];
+    }),
   ));
 
 export default rolesMap;

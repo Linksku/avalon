@@ -53,7 +53,7 @@ type RoleName =
 
 type Role = {
   disabled?: boolean,
-  id: number,
+  id: string,
   group: RoleGroup,
   name: RoleName,
   isEvil: boolean,
@@ -71,8 +71,8 @@ type Role = {
 type Player = {
   id: number,
   name: string,
-  roleId?: number,
+  roleId?: string,
   isPoisoned?: boolean,
-  drunkAs?: number,
+  drunkAs?: string,
   info?: string,
 };
