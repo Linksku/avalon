@@ -46,8 +46,13 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
 
   const playersArr: { player: Player, role: Role }[] = [];
   for (const player of players.values()) {
+    delete player.info;
+    delete player.isPoisoned;
+    delete player.drunkAs;
+
     const curRole = shuffledRoles.pop()!;
     player.roleId = curRole.id;
+
     playersArr.push({
       player,
       role: curRole,
@@ -85,13 +90,16 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
     }
   }
 
+  /*
+  // BotC Lunatic, doesn't work because they'll fail
   if (roleNames.includes('Lunatic')) {
     const lunatic = playersArr.find(p => p.role.name === 'Lunatic')!;
-    const evils = playersArr.filter(p => !p.role.isEvil);
+    const evils = playersArr.filter(p => p.role.isEvil);
     const drunkAs = shuffle(evils)[0];
     lunatic.player.isPoisoned = true;
     lunatic.player.drunkAs = drunkAs.role.id;
   }
+  */
 
   playersArr.sort((a, b) => (a.role.runsLastPriority ?? 0) - (b.role.runsLastPriority ?? 0));
   for (const p of playersArr) {
@@ -99,7 +107,7 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
       const role = p.player.drunkAs
         ? roles.get(p.player.drunkAs)!
         : p.role;
-      const randPlayers = getPoisonedRandPlayers(playersArr);
+      const randPlayers = getPoisonedRandPlayers(playersArr, p.player, role);
       p.player.info = role.getInfo?.(randPlayers, p.player) ?? undefined;
     } else {
       p.player.info = p.role.getInfo?.(playersArr, p.player) ?? undefined;

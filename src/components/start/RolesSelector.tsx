@@ -108,9 +108,12 @@ export default React.memo(function RolesSelector() {
           const roleNames = [...selectedRoles].map(r => r.name);
           for (const r of role.requiredRoles) {
             if (!roleNames.includes(r)) {
-              newSelected.add(
-                [...roles.values()].find(r2 => r2.name === r) as Role,
-              );
+              const requiredRole = [...roles.values()].find(r2 => r2.name === r && r2 !== role);
+              if (requiredRole) {
+                newSelected.add(requiredRole);
+              } else {
+                console.error(`Can't find required role ${r}`);
+              }
             }
           }
         }

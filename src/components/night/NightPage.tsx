@@ -114,7 +114,6 @@ const PlayerSlideUp = React.memo(function PlayerSlideUp({ player, role, onClose 
                 >
                   {drunkAsRole?.name ?? role.name}
                 </span>
-                {' '}&middot; {(drunkAsRole?.isEvil ?? role.isEvil) ? 'Evil' : 'Good'}
               </h4>
               <p>{drunkAsRole?.ability ?? role.ability}</p>
               <p className={styles.playerInfo}>{player.info}</p>

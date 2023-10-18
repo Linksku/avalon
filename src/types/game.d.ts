@@ -19,6 +19,7 @@ type RoleName =
   | 'Untrustworthy Servant'
   | 'Good Lancelot'
   | 'Evil Lancelot'
+  | 'Lunatic'
   | 'Revealer'
   | 'Washerwoman'
   | 'Investigator'
@@ -33,7 +34,6 @@ type RoleName =
   | 'Shugenja'
   | 'Mutant'
   | 'Magician'
-  | 'Lunatic'
   | 'Drunk'
   | 'Puzzlemaster'
   | 'Recluse'
@@ -60,8 +60,8 @@ type Role = {
   getStrength(roles: Role[]): number,
   ability: string,
   cantBePoisoned?: boolean,
-  minPlayers?: number,
   requiredRoles?: RoleName[],
+  mutuallyExclusiveRoles?: RoleName[],
   getInfo?: (players: { player: Player, role: Role }[], curPlayer: Player) => string | null,
   // Depends on other players' info, highest = last
   runsLastPriority?: number,

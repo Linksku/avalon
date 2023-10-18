@@ -66,11 +66,18 @@ function appearsAsRole(
   return role.name;
 }
 
-export function getPoisonedRandPlayers(players: { player: Player, role: Role }[]) {
-  const shuffledRoles = shuffle(players.map(p => p.role));
+export function getPoisonedRandPlayers(
+  players: { player: Player, role: Role }[],
+  curPlayer: Player,
+  // The role they think they are
+  curPlayerRole: Role,
+) {
+  const shuffledRoles = shuffle(players.map(p => p.role).filter(r => r !== curPlayerRole));
   return players.map(p => ({
     player: p.player,
-    role: shuffledRoles.pop()!,
+    role: p.player === curPlayer
+      ? curPlayerRole
+      : shuffledRoles.pop()!,
   }));
 }
 
@@ -78,8 +85,11 @@ export function getPoisonedInfo(
   player: { player: Player, role: Role },
   players: { player: Player, role: Role }[],
 ) {
-  const randPlayers = getPoisonedRandPlayers(players);
-  return player.role.getInfo!(randPlayers, player.player);
+  const randPlayers = getPoisonedRandPlayers(players, player.player, player.role);
+  if (!player.role.getInfo) {
+    return null;
+  }
+  return player.role.getInfo(randPlayers, player.player);
 }
 
 const roles = [
@@ -228,6 +238,19 @@ const roles = [
     isDeprioritized: true,
   },
   {
+    group: 'botc',
+    name: 'Lunatic',
+    isEvil: true,
+    getStrength: () => 1.5,
+    ability: 'Must fail every Quest',
+    getInfo(players, curPlayer) {
+      return formatNamesList(
+        'Your teammate',
+        getEvilTeammates(players, curPlayer),
+      );
+    },
+  },
+  {
     group: 'avalon',
     name: 'Revealer',
     isEvil: true,
@@ -334,7 +357,7 @@ const roles = [
       const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
       const evils = shuffled.filter(p => appearsAsEvilToGood(p));
       const goods = shuffled.filter(p => !appearsAsEvilToGood(p));
-      return `1 Evil among ${shuffle([evils[0], ...goods.slice(0, 2)]).map(p => p.player.name).join(', ')}`;
+      return `Exactly 1 Evil is among ${shuffle([evils[0], ...goods.slice(0, 2)]).map(p => p.player.name).join(', ')}`;
     },
   },
   {
@@ -422,13 +445,6 @@ const roles = [
   },
   {
     group: 'botc',
-    name: 'Lunatic',
-    isEvil: false,
-    getStrength: () => 1.5,
-    ability: 'Sees Evil role with random info',
-  },
-  {
-    group: 'botc',
     name: 'Drunk',
     isEvil: false,
     getStrength: roles => (roles.find(r => r.name === 'Merlin')
@@ -489,19 +505,6 @@ const roles = [
   },
   {
     group: 'botc',
-    name: 'Psychopath',
-    isEvil: true,
-    getStrength: () => 1.5,
-    ability: 'Must fail every Quest',
-    getInfo(players, curPlayer) {
-      return formatNamesList(
-        'Your teammate',
-        getEvilTeammates(players, curPlayer),
-      );
-    },
-  },
-  {
-    group: 'botc',
     name: 'No Dashii',
     isEvil: true,
     getStrength: roles => (roles.filter(r => !r.isEvil).length > 4 ? 3.5 : 3),
@@ -522,11 +525,16 @@ const roles = [
     ability: 'Knows other Mason',
     requiredRoles: ['Mason'],
     getInfo(players, curPlayer) {
+      const masons = players
+        .filter(p => p.player !== curPlayer && p.role.name === 'Mason')
+        .map(p => p.player.name);
+      console.log(curPlayer, masons);
+      if (!masons.length) {
+        return 'No other Masons';
+      }
       return formatNamesList(
         'Other Mason',
-        players
-          .filter(p => p.player !== curPlayer && p.role.name === 'Mason')
-          .map(p => p.player.name),
+        masons,
       );
     },
   },
@@ -536,6 +544,7 @@ const roles = [
     isEvil: false,
     getStrength: () => 1.5,
     ability: 'Assassinations against 1 player doesn\'t count',
+    cantBePoisoned: true,
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.role.name !== 'Merlin',
