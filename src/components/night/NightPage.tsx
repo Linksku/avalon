@@ -71,7 +71,7 @@ const WinConsSection = React.memo(function WinConsSection({ selectedRoles }: {
           {evilWinCons.join(' OR ')}
         </p>
         {hasDrunk && (
-          <p>* Can guess Drunk as their fake role</p>
+          <p className={styles.hint}>* Can guess Drunk as their fake role</p>
         )}
       </div>
     </>
@@ -201,6 +201,7 @@ export default function NightPage() {
         <WinConsSection selectedRoles={selectedRoles} />
 
         <h2 className={styles.title}>Player Roles</h2>
+        <p className={clsx(styles.hint, styles.playerHint)}>Seated clockwise</p>
         <div className={styles.players}>
           {[...players.values()].map(player => (
             <Card

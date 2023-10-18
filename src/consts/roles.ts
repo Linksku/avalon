@@ -432,7 +432,7 @@ const rolesArr = [
     name: 'Shugenja',
     isEvil: false,
     getStrength: () => 1.5,
-    ability: 'Knows if closest Evil is before or after',
+    ability: 'Knows if closest Evil is clockwise or counterclockwise',
     getInfo(players, curPlayer) {
       const curIdx = players.findIndex(p => p.player === curPlayer);
       const evilDists = players
@@ -446,9 +446,9 @@ const rolesArr = [
       const minDist = Math.min(...evilDists.map(d => Math.min(d.before, d.after)));
       const closest = shuffle(evilDists.filter(d => Math.min(d.before, d.after) === minDist));
       if (closest[0].before === closest[0].after) {
-        return `Closest is ${Math.random() < 0.5 ? 'before' : 'after'}`;
+        return `Closest is ${Math.random() < 0.5 ? 'counterclockwise' : 'clockwise'}`;
       }
-      return `Closest is ${closest[0].before < closest[0].after ? 'before' : 'after'}`;
+      return `Closest is ${closest[0].before < closest[0].after ? 'counterclockwise' : 'clockwise'}`;
     },
   },
   {

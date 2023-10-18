@@ -2,17 +2,18 @@
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 1rem;
 }
 
 .title {
-  margin: 1rem;
+  margin: 1rem 0;
 }
 
 .roles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 0 1rem;
-  padding: 0 1rem 1rem 1rem;
+  padding-bottom: 1rem;
 }
 
 .role {
@@ -41,7 +42,7 @@
 }
 
 .winCons {
-  padding: 0 1rem 1rem 1rem;
+  padding-bottom: 1rem;
 }
 
 .goodWinCon {
@@ -52,8 +53,17 @@
   color: #D32F2F;
 }
 
+.hint {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.playerHint {
+  margin-bottom: 1.5rem;
+}
+
 .players {
-  padding: 0 1rem 2rem 1rem;
+  padding-bottom: 2rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;

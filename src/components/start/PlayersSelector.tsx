@@ -20,7 +20,7 @@ export default React.memo(function PlayersSelector() {
     <div key={numResets} className={styles.container}>
       <h2>Players</h2>
 
-      <p>Enter players in the seating order.</p>
+      <p>Enter players in clockwise seating order.</p>
       {(playerIds.length >= 10 ? playerIds : [...playerIds, nextId]).map((id, idx) => {
         const player = players.get(id);
         return (
