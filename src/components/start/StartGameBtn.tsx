@@ -29,10 +29,10 @@ function getStrengthStr(strengthDiff: number) {
 function randInfo(players: { player: Player, role: Role }[], curPlayer: Player) {
   const otherPlayerNames = shuffle(players.map(p => p.player.name).filter(n => n !== curPlayer.name));
   const question = shuffle([
-    `How many spaces are between ${otherPlayerNames[0]} and ${otherPlayerNames[1]}?`,
-    `How far is ${otherPlayerNames[0]} from you?`,
-    `Do you trust ${otherPlayerNames[0]} or ${otherPlayerNames[1]} more?`,
+    `How far apart are ${otherPlayerNames[0]} and ${otherPlayerNames[1]}?`,
+    `What color shirt is ${otherPlayerNames[0]} wearing?`,
     `Quickly glance at ${otherPlayerNames[0]} and look confused.`,
+    'Look at the ceiling and say "hmm".',
   ])[0];
   return `Pretend you got information. ${question}`;
 }
