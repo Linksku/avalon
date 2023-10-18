@@ -232,7 +232,7 @@ const roles = [
     name: 'Revealer',
     isEvil: true,
     getStrength: () => 1.5,
-    ability: 'Reveals loyalty after second failed Quest',
+    ability: 'After 2 failed Quests, reveal role',
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
@@ -285,7 +285,7 @@ const roles = [
     name: 'Ravenkeeper',
     isEvil: false,
     getStrength: () => 1.5,
-    ability: 'After 2 failed Quests, view a player\'s role',
+    ability: 'After 2 failed Quests, learn a player\'s role',
     cantBePoisoned: true,
   },
   {
@@ -554,18 +554,24 @@ const roles = [
       const player = randElem(players.filter(
         p => p.player !== curPlayer && !appearsAsEvilToGood(p) && p.player.info,
       ));
+      let roleName: Nullish<RoleName>;
       let info: Nullish<string>;
       if (curPlayer.isPoisoned || player?.role.isEvil) {
         const good = randElem(players.filter(
           p => p.player !== curPlayer && !p.role.isEvil && p.player.info,
         ));
         if (good) {
+          roleName = good.role.name;
           info = getPoisonedInfo(good, players);
         }
       } else if (player) {
-        info = player?.player.info;
-      };
-      return `Info is "${info ?? 'none'}"`;
+        roleName = player.role.name;
+        info = player.player.info;
+      }
+
+      return roleName
+        ? `${roleName}'s info is "${info ?? 'none'}"`
+        : 'No one has info';
     },
     runsLastPriority: 2,
   },
@@ -627,7 +633,10 @@ const roles = [
       const info = curPlayer.isPoisoned && player
         ? getPoisonedInfo(player, players)
         : player?.player.info;
-      return `Info is "${info ?? 'none'}".\n${formatNamesList(
+      const fullInfo = player
+        ? `${player.role.name}'s info is "${info ?? 'none'}"`
+        : 'No Good players have info';
+      return `${fullInfo}\n${formatNamesList(
         'Your teammate',
         getEvilTeammates(players, curPlayer),
       )}`;
