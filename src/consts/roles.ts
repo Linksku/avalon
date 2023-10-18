@@ -327,15 +327,14 @@ const roles = [
     },
   },
   {
-    disabled: true,
     group: 'botc',
     name: 'Steward',
     isEvil: false,
     getStrength: () => 1.5,
-    ability: 'Knows a Good player\'s role',
+    ability: 'Knows a Good player',
     getInfo(players, curPlayer) {
       const p = randElem(players.filter(p => p.player !== curPlayer && !appearsAsEvilToGood(p)))!;
-      return `${p.player.name} is ${appearsAsRole(p.role, players, curPlayer)}`;
+      return `${p.player.name} is Good`;
     },
   },
   {
