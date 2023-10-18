@@ -88,7 +88,14 @@ const config = {
       ignoredNodes: ['TemplateLiteral > *'],
     }],
     'no-console': [2, {
-      allow: ['assert', 'time', 'timeEnd', 'timeStamp'],
+      allow: [
+        'assert',
+        'time',
+        'timeEnd',
+        'timeStamp',
+        'error',
+        'warn',
+      ],
     }],
     'no-extra-parens': [2, 'functions'],
     'no-extra-semi': 2,

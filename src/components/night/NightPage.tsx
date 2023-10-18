@@ -102,6 +102,7 @@ const PlayerSlideUp = React.memo(function PlayerSlideUp({ player, role, onClose 
           [styles.playerSlideUpOverlayShown]: !!(player && role),
         })}
         onClick={onClose}
+        role="dialog"
       />
       <div
         className={clsx(styles.playerSlideUp, {
@@ -159,6 +160,7 @@ export default function NightPage() {
 
     for (const player of players.values()) {
       const role = roles.get(player.roleId!);
+      // eslint-disable-next-line no-console
       console.log(`${player.name} (${role?.name}):`, player.info, player, role);
     }
     printedPlayers.current = players;
@@ -190,9 +192,10 @@ export default function NightPage() {
               </CardContent>
             </Card>
           ))}
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} />
-          ))}
+          {Array.from({ length: 5 }).map(
+            // eslint-disable-next-line react/no-array-index-key
+            (_, i) => <div key={i} />,
+          )}
         </div>
 
         <WinConsSection selectedRoles={selectedRoles} />

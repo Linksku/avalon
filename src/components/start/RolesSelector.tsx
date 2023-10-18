@@ -173,9 +173,10 @@ export default React.memo(function RolesSelector() {
                   </Card>
                 );
               })}
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} />
-              ))}
+              {Array.from({ length: 5 }).map(
+                // eslint-disable-next-line react/no-array-index-key
+                (_, i) => <div key={i} />,
+              )}
             </div>
           </React.Fragment>
         );

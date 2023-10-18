@@ -1,6 +1,6 @@
 import shuffle from 'lodash/shuffle';
 
-let rolesMap: Map<string, Role>;
+const rolesMap = new Map<string, Role>();
 
 function randElem<T>(arr: T[]): T | undefined {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -92,7 +92,7 @@ export function getPoisonedInfo(
   return player.role.getInfo(randPlayers, player.player);
 }
 
-const roles = [
+const rolesArr = [
   {
     group: 'base',
     name: 'Villager',
@@ -321,8 +321,12 @@ const roles = [
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(p => p.player !== curPlayer))!;
       const player2 = appearsAsEvilToGood(player)
-        ? randElem(players.filter(p => p !== player && p.player !== curPlayer && !appearsAsEvilToGood(p)))!
-        : randElem(players.filter(p => p !== player && p.player !== curPlayer && appearsAsEvilToGood(p)))!;
+        ? randElem(players.filter(
+          p => p !== player && p.player !== curPlayer && !appearsAsEvilToGood(p),
+        ))!
+        : randElem(players.filter(
+          p => p !== player && p.player !== curPlayer && appearsAsEvilToGood(p),
+        ))!;
       return `${player.player.name} is ${appearsAsRole(player.role, players, curPlayer)} or ${appearsAsRole(player2.role, players, curPlayer)}`;
     },
   },
@@ -333,8 +337,10 @@ const roles = [
     getStrength: () => 1.5,
     ability: 'Knows a Good player',
     getInfo(players, curPlayer) {
-      const p = randElem(players.filter(p => p.player !== curPlayer && !appearsAsEvilToGood(p)))!;
-      return `${p.player.name} is Good`;
+      const good = randElem(players.filter(
+        p => p.player !== curPlayer && !appearsAsEvilToGood(p),
+      ))!;
+      return `${good.player.name} is Good`;
     },
   },
   {
@@ -358,6 +364,12 @@ const roles = [
       const shuffled = shuffle(players.filter(p => p.player !== curPlayer));
       const evil = shuffled.find(p => appearsAsEvilToGood(p));
       const goods = shuffled.filter(p => !appearsAsEvilToGood(p));
+      if (!evil) {
+        return 'No players appear as Evil';
+      }
+      if (goods.length < 2) {
+        return 'Less than 2 players appear as Good';
+      }
       return `Exactly 1 Evil is among ${shuffle([evil, ...goods.slice(0, 2)]).map(p => p.player.name).join(', ')}`;
     },
   },
@@ -448,7 +460,7 @@ const roles = [
     group: 'botc',
     name: 'Drunk',
     isEvil: false,
-    getStrength: roles => (roles.find(r => r.name === 'Merlin')
+    getStrength: roles => (roles.some(r => r.name === 'Merlin')
       || roles.filter(r => !r.isEvil).length > 4
       ? -1.5
       : -1),
@@ -530,7 +542,6 @@ const roles = [
       const masons = players
         .filter(p => p.player !== curPlayer && p.role.name === 'Mason')
         .map(p => p.player.name);
-      console.log(curPlayer, masons);
       if (!masons.length) {
         return 'No other Masons';
       }
@@ -679,19 +690,16 @@ const roles = [
   },
 ] satisfies (Omit<Role, 'id'> & { maxCount?: number })[];
 
-rolesMap = new Map(roles
+const tempRoles = rolesArr
   .filter(role => !role.disabled)
   .flatMap(
-    ({ maxCount, ...role }) => Array.from({ length: maxCount ?? 1 }).map((_, idx) => {
-      const id = `${role.name}${idx}`;
-      return [
-        id,
-        {
-          id,
-          ...role,
-        },
-      ] as [string, Role];
-    }),
-  ));
+    ({ maxCount, ...role }) => Array.from({ length: maxCount ?? 1 }).map((_, idx) => ({
+      id: `${role.name}${idx}`,
+      ...role,
+    })),
+  );
+for (const r of tempRoles) {
+  rolesMap.set(r.id, r);
+}
 
 export default rolesMap;

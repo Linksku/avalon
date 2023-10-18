@@ -18,6 +18,7 @@ export default React.memo(function TopBar() {
           <IconButton
             size="large"
             onClick={() => {
+              // eslint-disable-next-line no-alert
               if (window.confirm('Quit game?')) {
                 localStorage.removeItem('avalonState');
                 for (const player of players.values()) {

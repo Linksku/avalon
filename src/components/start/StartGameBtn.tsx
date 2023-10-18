@@ -27,7 +27,10 @@ function getStrengthStr(strengthDiff: number) {
 }
 
 function randInfo(players: { player: Player, role: Role }[], curPlayer: Player) {
-  const otherPlayerNames = shuffle(players.map(p => p.player.name).filter(n => n !== curPlayer.name));
+  const otherPlayerNames = shuffle(
+    players.map(p => p.player.name)
+      .filter(n => n !== curPlayer.name),
+  );
   const question = shuffle([
     `How far apart are ${otherPlayerNames[0]} and ${otherPlayerNames[1]}?`,
     `What color shirt is ${otherPlayerNames[0]} wearing?`,

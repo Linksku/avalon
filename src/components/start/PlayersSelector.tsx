@@ -31,8 +31,8 @@ export default React.memo(function PlayersSelector() {
             onFocus={event => {
               if (!players.has(id)) {
                 const name = event.target.value.trim();
-                setPlayers(players => {
-                  const newPlayers = new Map(players);
+                setPlayers(s => {
+                  const newPlayers = new Map(s);
                   newPlayers.set(id, { ...player, id, name });
                   return newPlayers;
                 });
@@ -41,14 +41,14 @@ export default React.memo(function PlayersSelector() {
             onBlur={event => {
               const name = event.target.value.trim();
               if (!name && players.has(id)) {
-                setPlayers(players => {
-                  const newPlayers = new Map(players);
+                setPlayers(s => {
+                  const newPlayers = new Map(s);
                   newPlayers.delete(id);
                   return newPlayers;
                 });
               } else if (name) {
-                setPlayers(players => {
-                  const newPlayers = new Map(players);
+                setPlayers(s => {
+                  const newPlayers = new Map(s);
                   newPlayers.set(id, { ...player, id, name });
                   return newPlayers;
                 });
@@ -58,8 +58,8 @@ export default React.memo(function PlayersSelector() {
               const elem = event.target as HTMLInputElement;
               if (event.code === 'Enter') {
                 const inputs = document.querySelectorAll('input[type="text"]') as NodeListOf<HTMLInputElement>;
-                const idx = [...inputs].indexOf(elem);
-                inputs[idx + 1]?.focus();
+                const inputIdx = [...inputs].indexOf(elem);
+                inputs[inputIdx + 1]?.focus();
               }
             }}
             fullWidth
