@@ -105,7 +105,17 @@ const PlayerSlideUp = React.memo(function PlayerSlideUp({ player, role, onClose 
           {player && role && (
             <>
               <h3>{player.name}</h3>
-              <h4>{drunkAsRole?.name ?? role.name} &middot; {(drunkAsRole?.isEvil ?? role.isEvil) ? 'Evil' : 'Good'}</h4>
+              <h4>
+                {'You are '}
+                <span
+                  className={clsx(styles.roleName, styles.playerRoleName, {
+                    [styles.roleNameEvil]: (drunkAsRole?.isEvil ?? role.isEvil),
+                  })}
+                >
+                  {drunkAsRole?.name ?? role.name}
+                </span>
+                {' '}&middot; {(drunkAsRole?.isEvil ?? role.isEvil) ? 'Evil' : 'Good'}
+              </h4>
               <p>{drunkAsRole?.ability ?? role.ability}</p>
               <p className={styles.playerInfo}>{player.info}</p>
             </>
