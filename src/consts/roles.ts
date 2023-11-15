@@ -301,7 +301,7 @@ const rolesArr = [
     group: 'botc',
     name: 'Empath',
     isEvil: false,
-    getStrength: () => 2,
+    getStrength: () => 1.5,
     ability: 'Knows if both neighbors are Good',
     getInfo(players, curPlayer) {
       const curIdx = players.findIndex(p => p.player === curPlayer);
@@ -477,8 +477,8 @@ const rolesArr = [
     isEvil: false,
     getStrength: roles => (roles.some(r => r.name === 'Merlin')
       || roles.filter(r => !r.isEvil).length > 4
-      ? -1.5
-      : -1),
+      ? -2
+      : -1.5),
     ability: 'Sees Good role with random info',
   },
   {
@@ -533,8 +533,8 @@ const rolesArr = [
     group: 'botc',
     name: 'No Dashii',
     isEvil: true,
-    getStrength: roles => (roles.filter(r => !r.isEvil).length > 4 ? 3.5 : 3),
-    ability: 'A Good neighbor knows random info',
+    getStrength: roles => (roles.filter(r => !r.isEvil).length > 4 ? 4 : 3.5),
+    ability: 'An adjacent Good knows random info',
     getInfo(players, curPlayer) {
       return formatNamesList(
         'Your teammate',
@@ -691,7 +691,7 @@ const rolesArr = [
     group: 'misc',
     name: 'Hitler',
     isEvil: true,
-    getStrength: roles => (roles.length >= 7 ? 2.5 : 2),
+    getStrength: roles => (roles.length >= 7 ? 3 : 2),
     ability: 'When on Quest, can reveal role to fail without votes',
     getInfo(players, curPlayer) {
       return formatNamesList(
