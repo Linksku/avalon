@@ -445,10 +445,10 @@ const rolesArr = [
         .filter(Boolean) as { before: number, after: number }[];
       const minDist = Math.min(...evilDists.map(d => Math.min(d.before, d.after)));
       const closest = shuffle(evilDists.filter(d => Math.min(d.before, d.after) === minDist));
-      if (closest[0].before === closest[0].after) {
+      if (closest.length > 1) {
         return `Closest is ${Math.random() < 0.5 ? 'counterclockwise' : 'clockwise'}`;
       }
-      return `Closest is ${closest[0].before < closest[0].after ? 'counterclockwise' : 'clockwise'}`;
+      return `Closest is ${closest[0].before < closest[0].after ? 'clockwise' : 'counterclockwise'}`;
     },
   },
   {
