@@ -11,9 +11,18 @@
 
 .roles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0 0.5rem;
+  margin: 0 -0.5rem;
   padding-bottom: 1rem;
+
+  @media (min-width: 360px) {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
 }
 
 .role {
@@ -30,7 +39,7 @@
 
 .roleName {
   color: #1976D2;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
 }
 
 .roleNameEvil {
@@ -65,7 +74,7 @@
 .players {
   padding-bottom: 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1rem;
 }
 

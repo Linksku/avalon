@@ -11,9 +11,17 @@
 
 .roles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0 1rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0 0.5rem;
+  margin: 0 -0.5rem 2rem -0.5rem;
+
+  @media (min-width: 360px) {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
 }
 
 .role {
@@ -49,7 +57,7 @@
   color: #1976D2;
   transition: color 0.2s;
   margin: 0;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
 
   &:last-child {
     margin-bottom: 0;
