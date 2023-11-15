@@ -28,12 +28,13 @@ const WinConsSection = React.memo(function WinConsSection({ selectedRoles }: {
       ?? shuffle(rolesArr.filter(role => role.isEvil))[0]),
     [rolesArr],
   );
-  const numPowerGoods = rolesArr
+  const goods = rolesArr.filter(role => !role.isEvil && role.name !== 'Drunk');
+  const numGoods = goods.length;
+  const numPowerGoods = goods
     .filter(role => role.name !== 'Villager'
       && role.name !== 'Merlin'
       && role.name !== 'Percival')
     .length;
-  const numGoods = rolesArr.filter(role => !role.isEvil).length;
   const hasDrunk = rolesArr.some(role => role.name === 'Drunk');
 
   const evilWinCons = ['3 Quests fail'];
@@ -41,7 +42,11 @@ const WinConsSection = React.memo(function WinConsSection({ selectedRoles }: {
     evilWinCons.push(`${assassin.name} guesses Merlin`);
   }
   if (numPowerGoods >= numGoods / 2) {
-    evilWinCons.push('Evil guesses half of Goods');
+    if (goods.length === 3) {
+      evilWinCons.push('Evil guesses all Goods');
+    } else {
+      evilWinCons.push(`Evil guesses ${Math.ceil(numGoods / 2)} Goods (no repeat guesses)`);
+    }
   }
   return (
     <>

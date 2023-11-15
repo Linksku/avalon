@@ -512,6 +512,7 @@ const rolesArr = [
     ability: 'Appears as Evil to Goods',
   },
   {
+    disabled: true,
     group: 'botc',
     name: 'Spy',
     isEvil: true,
@@ -546,7 +547,7 @@ const rolesArr = [
     name: 'Mason',
     maxCount: 2,
     isEvil: false,
-    getStrength: () => 1.5,
+    getStrength: () => 1,
     ability: 'Knows other Mason',
     requiredRoles: ['Mason'],
     getInfo(players, curPlayer) {
