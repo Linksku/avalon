@@ -453,6 +453,22 @@ const rolesArr = [
   },
   {
     group: 'botc',
+    name: 'Bounty Hunter',
+    isEvil: false,
+    getStrength: () => 2.5,
+    ability: 'Knows 1 player is a Evil',
+    getInfo(players, curPlayer) {
+      const evil = randElem(players.filter(
+        p => p.player !== curPlayer && appearsAsEvilToGood(p.role),
+      ));
+      if (!evil) {
+        return 'No players appear as Evil';
+      }
+      return `${evil.player.name} is Evil`;
+    },
+  },
+  {
+    group: 'botc',
     name: 'Mutant',
     isEvil: false,
     getStrength: () => 0.5,

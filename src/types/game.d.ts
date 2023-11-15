@@ -32,6 +32,7 @@ type RoleName =
   | 'Chef'
   | 'Clockmaker'
   | 'Shugenja'
+  | 'Bounty Hunter'
   | 'Mutant'
   | 'Magician'
   | 'Drunk'
