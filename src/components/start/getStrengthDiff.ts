@@ -11,7 +11,7 @@ export default function getStrengthDiff(roles: Set<Role>) {
   const rolesArr = Array.from(roles).filter(r => r.name !== 'Drunk');
   const baseDiff = PLAYERS_TO_BASE_DIFF.get(rolesArr.length) ?? 0
     // Assumes players are uncoordinated and side convos will occur
-    - ((rolesArr.length / 5) - 1);
+    - ((rolesArr.length / 3) - 1);
   const strengthDiff = Array.from(roles).reduce(
     (sum, role) => (role.isEvil
       ? sum - role.getStrength(rolesArr)
