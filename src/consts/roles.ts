@@ -230,7 +230,7 @@ const rolesArr = [
     name: 'Evil Lancelot',
     isEvil: true,
     getStrength: () => 1.5,
-    ability: 'Can switch teams with Good Lancelot',
+    ability: 'Can switch teams with Good Lancelot. Doesn\'t know Evil',
     requiredRoles: ['Good Lancelot'],
     isDeprioritized: true,
   },
@@ -455,8 +455,8 @@ const rolesArr = [
     group: 'botc',
     name: 'Bounty Hunter',
     isEvil: false,
-    getStrength: () => 2.5,
-    ability: 'Knows 1 player is a Evil',
+    getStrength: () => 2,
+    ability: 'Knows 1 player is Evil',
     getInfo(players, curPlayer) {
       const evil = randElem(players.filter(
         p => p.player !== curPlayer && appearsAsEvilToGood(p.role),
@@ -480,10 +480,13 @@ const rolesArr = [
     name: 'Magician',
     isEvil: false,
     getStrength: roles => {
-      const visibleEvils = roles.filter(
-        r => r.isEvil && r.name !== 'Oberon' && r.name !== 'Evil Lancelot' && r.name !== 'Dream Wolf',
+      const evilsSeeTeammates = roles.filter(
+        r => r.isEvil
+          && r.name !== 'Oberon'
+          && r.name !== 'Evil Lancelot'
+          && r.name !== 'Dream Wolf',
       );
-      return visibleEvils.length >= 2 ? 2 : 1;
+      return evilsSeeTeammates.length >= 2 ? 2 : 1;
     },
     ability: 'Appears as Evil to Evils',
   },
@@ -526,6 +529,36 @@ const rolesArr = [
     isEvil: false,
     getStrength: roles => (roles.filter(r => r.isEvil).length > 2 ? 0 : 0.5),
     ability: 'Appears as Evil to Goods',
+  },
+  {
+    group: 'botc',
+    name: 'Good Twin',
+    isEvil: false,
+    getStrength: () => 2,
+    ability: 'Knows Evil Twin',
+    requiredRoles: ['Evil Twin'],
+    getInfo(players) {
+      const evilTwin = players.find(p => p.role.name === 'Evil Twin');
+      if (!evilTwin) {
+        return 'No Evil Twin';
+      }
+      return `${evilTwin.player.name} is Evil Twin`;
+    },
+  },
+  {
+    group: 'botc',
+    name: 'Evil Twin',
+    isEvil: true,
+    getStrength: () => 2,
+    ability: 'Knows Good Twin',
+    requiredRoles: ['Good Twin'],
+    getInfo(players) {
+      const goodTwin = players.find(p => p.role.name === 'Good Twin');
+      if (!goodTwin) {
+        return 'No Good Twin';
+      }
+      return `${goodTwin.player.name} is Good Twin`;
+    },
   },
   {
     disabled: true,
@@ -598,7 +631,7 @@ const rolesArr = [
     group: 'werewolf',
     name: 'Doppleganger',
     isEvil: false,
-    getStrength: () => 1.5,
+    getStrength: () => 2,
     ability: 'Knows a Good player\'s info',
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(

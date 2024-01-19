@@ -38,6 +38,8 @@ type RoleName =
   | 'Drunk'
   | 'Puzzlemaster'
   | 'Recluse'
+  | 'Good Twin'
+  | 'Evil Twin'
   | 'Spy'
   | 'Psychopath'
   | 'No Dashii'
