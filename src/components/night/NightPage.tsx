@@ -54,7 +54,7 @@ const WinConsSection = React.memo(function WinConsSection({ selectedRoles }: {
       <div className={styles.winCons}>
         <p>
           <span className={styles.goodWinCon}>Good</span>
-          {' wins if 3 Quests fail'}
+          {' wins if 3 Quests succeed'}
         </p>
         {rolesArr.some(role => role.name === 'Lone Wolf') && (
           <p>
