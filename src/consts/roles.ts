@@ -544,6 +544,7 @@ const rolesArr = [
       }
       return `${evilTwin.player.name} is Evil Twin`;
     },
+    isDeprioritized: true,
   },
   {
     group: 'botc',
@@ -559,15 +560,15 @@ const rolesArr = [
       }
       return `${goodTwin.player.name} is Good Twin`;
     },
+    isDeprioritized: true,
   },
   {
-    disabled: true,
     group: 'botc',
     name: 'Spy',
     isEvil: true,
-    getStrength: () => 3,
+    getStrength: () => 2.5,
     ability: 'Knows a Good player\'s role',
-    mutuallyExclusiveRoles: ['Merlin'],
+    mutuallyExclusiveRoles: ['Merlin', 'Mason'],
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(
         p => p.player !== curPlayer && !p.role.isEvil && p.role.name !== 'Merlin',
@@ -711,13 +712,9 @@ const rolesArr = [
     ability: 'Knows a Good player\'s info',
     mutuallyExclusiveRoles: [
       'Merlin',
-      'Percival',
-      'Untrustworthy Servant',
-      'Washerwoman',
-      'Dreamer',
       'Puzzlemaster',
-      'Mason',
       'Doppleganger',
+      'Mason',
     ],
     getInfo(players, curPlayer) {
       const player = randElem(players.filter(

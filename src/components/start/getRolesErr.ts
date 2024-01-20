@@ -51,5 +51,12 @@ export default function getRolesErr(players: Map<number, Player>, selectedRoles:
     }
   }
 
+  const numKnownGoods = rolesArr
+    .filter(r => ['Evil Twin', 'Spy', 'Mystic Wolf'].includes(r.name))
+    .length;
+  if (numGoods - numKnownGoods <= 2) {
+    return 'Too many known goods';
+  }
+
   return null;
 }
