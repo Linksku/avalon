@@ -104,8 +104,9 @@ function assignRoles(players: Map<number, Player>, selectedRoles: Set<Role>) {
   }
   */
 
-  playersArr.sort((a, b) => (a.role.runsLastPriority ?? 0) - (b.role.runsLastPriority ?? 0));
-  for (const p of playersArr) {
+  const infoOrder = playersArr.slice()
+    .sort((a, b) => (a.role.runsLastPriority ?? 0) - (b.role.runsLastPriority ?? 0));
+  for (const p of infoOrder) {
     if (p.player.isPoisoned) {
       const role = p.player.drunkAs
         ? roles.get(p.player.drunkAs)!
