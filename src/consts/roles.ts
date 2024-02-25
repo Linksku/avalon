@@ -240,7 +240,7 @@ const rolesArr = [
     group: 'avalon',
     name: 'Lunatic',
     isEvil: true,
-    getStrength: () => 1.5,
+    getStrength: () => 2,
     ability: 'Must fail every Quest',
     getInfo(players, curPlayer) {
       return formatNamesList(
@@ -262,6 +262,21 @@ const rolesArr = [
         getEvilTeammates(players, curPlayer),
       );
     },
+    isDeprioritized: true,
+  },
+  {
+    group: 'avalon',
+    name: 'Brute',
+    isEvil: true,
+    getStrength: () => 1.5,
+    ability: 'May fail only the first 3 Quests',
+    getInfo(players, curPlayer) {
+      return formatNamesList(
+        'Your teammate',
+        getEvilTeammates(players, curPlayer),
+      );
+    },
+    isDeprioritized: true,
   },
   {
     group: 'botc',
@@ -639,6 +654,21 @@ const rolesArr = [
         masons,
       );
     },
+  },
+  {
+    group: 'werewolf',
+    name: 'Count',
+    isEvil: false,
+    getStrength: () => 3,
+    ability: 'Knows number of Evils on each side',
+    getInfo(players, curPlayer) {
+      const curIdx = players.findIndex(p => p.player === curPlayer);
+      const playersShifted = players.slice(curIdx + 1).concat(players.slice(0, curIdx));
+      const clockwise = playersShifted.slice(0, Math.floor(playersShifted.length / 2));
+      const numEvils = clockwise.filter(p => appearsAsEvilToGood(p.role)).length;
+      return `${numEvils} Evil${numEvils === 1 ? '' : 's'} clockwise (${clockwise.map(p => p.player.name).join(', ')})`;
+    },
+    isDeprioritized: true,
   },
   {
     group: 'werewolf',
