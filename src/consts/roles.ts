@@ -121,10 +121,12 @@ const rolesArr = [
       const numAppearEvils = roles.filter(
         r => r.name === 'Recluse' || r.name === 'Untrustworthy Servant',
       ).length;
+      const numGood = roles.filter(r => !r.isEvil).length;
       if (!numKnownEvils) {
-        return -1;
+        return -Math.round(3 / numGood);
       }
-      return Math.round(numKnownEvils * (numKnownEvils / (numKnownEvils + numAppearEvils))) / 2;
+      return (Math.round(numKnownEvils * (numKnownEvils / (numKnownEvils + numAppearEvils))) / 2)
+        - Math.round(3 / numGood);
     },
     ability: 'Knows Evil',
     getInfo(players) {
@@ -235,7 +237,7 @@ const rolesArr = [
     isDeprioritized: true,
   },
   {
-    group: 'botc',
+    group: 'avalon',
     name: 'Lunatic',
     isEvil: true,
     getStrength: () => 1.5,
@@ -312,6 +314,7 @@ const rolesArr = [
     },
   },
   {
+    disabled: true,
     group: 'botc',
     name: 'Ravenkeeper',
     isEvil: false,
@@ -468,6 +471,7 @@ const rolesArr = [
     },
   },
   {
+    disabled: true,
     group: 'botc',
     name: 'Mutant',
     isEvil: false,
