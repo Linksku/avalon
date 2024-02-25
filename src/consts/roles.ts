@@ -133,7 +133,7 @@ const rolesArr = [
       return formatNamesList(
         'Evil',
         players
-          .filter(p => appearsAsEvilToGood(p.role) && p.role.name !== 'Mordred')
+          .filter(p => appearsAsEvilToGood(p.role))
           .map(p => p.player.name),
       );
     },
@@ -429,6 +429,29 @@ const rolesArr = [
       }
       return `Longest sequence is ${max}`;
     },
+  },
+  {
+    group: 'botc',
+    name: 'Cannibal',
+    isEvil: false,
+    getStrength: () => 2.5,
+    ability: 'Knows a Good player and gets info as their role',
+    getInfo(players, curPlayer) {
+      const player = randElem(players.filter(
+        p => p.player !== curPlayer && !p.role.isEvil && p.role.getInfo,
+      ));
+      let info: Nullish<string>;
+      if (curPlayer.isPoisoned && player) {
+        info = getPoisonedInfo(player, players);
+      } else if (player) {
+        info = player.role.getInfo?.(players, curPlayer);
+      }
+
+      return info && player
+        ? `Info as ${player.player.name}'s role: "${info}"`
+        : 'No one has info';
+    },
+    runsLastPriority: 2,
   },
   {
     group: 'botc',

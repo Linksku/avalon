@@ -31,6 +31,7 @@ type RoleName =
   | 'Noble'
   | 'Chef'
   | 'Clockmaker'
+  | 'Cannibal'
   | 'Shugenja'
   | 'Bounty Hunter'
   | 'Mutant'
