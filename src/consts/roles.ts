@@ -123,10 +123,10 @@ const rolesArr = [
       ).length;
       const numGood = roles.filter(r => !r.isEvil).length;
       if (!numKnownEvils) {
-        return -Math.round(3 / numGood);
+        return numGood ? -Math.round(3 / numGood) : 0;
       }
       return (Math.round(numKnownEvils * (numKnownEvils / (numKnownEvils + numAppearEvils))) / 2)
-        - Math.round(3 / numGood);
+        - (numGood ? Math.round(3 / numGood) : 0);
     },
     ability: 'Knows Evil',
     getInfo(players) {
